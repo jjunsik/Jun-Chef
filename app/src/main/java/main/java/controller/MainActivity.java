@@ -1,8 +1,10 @@
-package main.java;
+package main.java.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import main.java.R;
 
 public class MainActivity extends AppCompatActivity {
 
