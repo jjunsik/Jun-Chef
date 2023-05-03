@@ -6,7 +6,6 @@ import main.java.model.SearchHistory;
 
 public class HistoryServiceImpl implements HistoryService{
 
-
     @Override
     public List<SearchHistory> getSearchHistories(int limit) {
         return null;
