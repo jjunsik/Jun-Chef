@@ -1,4 +1,4 @@
-package main.java.service.util;
+package main.java.util.parser;
 
 import main.java.model.SearchResult;
 
