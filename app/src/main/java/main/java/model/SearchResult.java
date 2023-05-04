@@ -22,4 +22,13 @@ public class SearchResult {
     public String[] getCookingOrder() {
         return cookingOrder;
     }
+
+    // TODO: ADD HISTORY 개발
+    public SearchHistory toSearchHistory() {
+        SearchHistory searchHistory = null;
+
+        //
+
+        return searchHistory;
+    }
 }
