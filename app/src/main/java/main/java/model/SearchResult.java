@@ -1,5 +1,12 @@
 package main.java.model;
 
+import android.annotation.SuppressLint;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 public class SearchResult {
     private final String recipeName;
     private final String[] ingredients;
@@ -25,10 +32,6 @@ public class SearchResult {
 
     // TODO: ADD HISTORY 개발
     public SearchHistory toSearchHistory() {
-        SearchHistory searchHistory = null;
-
-        //
-
-        return searchHistory;
+        return new SearchHistory(getRecipeName());
     }
 }
