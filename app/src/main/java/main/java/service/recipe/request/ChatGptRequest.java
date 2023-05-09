@@ -23,7 +23,7 @@ public class ChatGptRequest extends CommonRequest {
     }
 
     @Override
-    public String toRequestString() {
+    public String toPostRequestString() {
         return '{' +
                 "\"model\":\"" + model + '\"' +
                 ",\"prompt\":\"" + prompt + '\"' +
