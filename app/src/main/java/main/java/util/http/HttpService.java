@@ -2,6 +2,7 @@ package main.java.util.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -17,7 +18,6 @@ public class HttpService {
 
     public String post(CommonRequest request) {
         String response = null;
-        BufferedReader br = null;
 
         try {
             // url 입력
@@ -33,36 +33,46 @@ public class HttpService {
             connection.setRequestProperty("Authorization", "Bearer " + request.getKey());
 
             // body 입력
-            byte[] requestBodyBytes = request.toRequestString().getBytes();
             OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(requestBodyBytes);
+            outputStream.write(getRequestBodyBytes(request.toPostRequestString()));
 
             // response code 가 200 인지를 확인
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK)
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
                 return null;
 
             // response
-            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder stringBuilder = new StringBuilder();
+            response = getResponseByInputStream(connection.getInputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    private byte[] getRequestBodyBytes(String string) {
+        return string.getBytes();
+    }
+
+    private String getResponseByInputStream(InputStream inputStream) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        String inputLine;
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
             while ((inputLine = br.readLine()) != null) {
                 stringBuilder.append(inputLine);
             }
-
-            response = stringBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            // buffered reader close
-            if(br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                br.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
+        return stringBuilder.toString();
+    }
 
         return response;
     }
