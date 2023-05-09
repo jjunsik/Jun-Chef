@@ -33,6 +33,13 @@ public class ChatGptRequest extends CommonRequest {
     }
 
     @Override
+    public String toGetRequestString() {
+        return "?model="
+                +model
+                +"&prompt=";
+    }
+
+    @Override
     public String getKey() {
         return CHAT_GPT_KEY;
     }
