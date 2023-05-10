@@ -11,13 +11,6 @@ public class ChatGptRequest extends CommonRequest {
     private final Float temperature = 0.3f;
     private final Integer max_tokens = 100;
 
-//    public ChatGptRequest(String model, String prompt, Float temperature, Integer max_tokens) {
-//        this.model = model;
-//        this.prompt = prompt;
-//        this.temperature = temperature;
-//        this.max_tokens = max_tokens;
-//    }
-
     public ChatGptRequest(String question) {
         this.prompt = question;
     }

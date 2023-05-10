@@ -5,12 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import main.java.util.http.request.CommonRequest;
 
@@ -26,6 +22,11 @@ public class HttpService {
 
             // output stream 에 값을 입력 하기 위해 설정 변경
             connection.setDoOutput(true);
+
+//             응답 받을 데이터가 있는 경우 true
+//            connection.setDoInput(true);
+//             요청시 데이터를 보내야 하는 경우 true
+//            connection.setDoOutput(true);
 
             // header 정보 입력
             connection.setRequestMethod("POST");
