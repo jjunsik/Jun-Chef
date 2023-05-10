@@ -1,19 +1,22 @@
 package main.java.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class SearchHistory {
     private final String recipeName;
-    private final Date createDateTime;
+    private final String createDateTime;
 
-    public SearchHistory(String recipeName, Date createDateTime) {
+    public SearchHistory(String recipeName) {
         this.recipeName = recipeName;
-        this.createDateTime = createDateTime;
+        LocalDate time = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");
+        this.createDateTime = time.format(formatter);
     }
     public String getRecipeName() {
         return recipeName;
     }
-    public Date getCreateDateTime() {
+    public String getCreateDateTime() {
         return createDateTime;
     }
 }
