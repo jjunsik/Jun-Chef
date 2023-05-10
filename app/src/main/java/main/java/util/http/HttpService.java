@@ -75,6 +75,28 @@ public class HttpService {
         return stringBuilder.toString();
     }
 
+    public String get(CommonRequest request) {
+        String response = null;
+        HttpURLConnection conn = null;
+
+        try {
+            URL url = new URL(request.getUrl() + request.toGetRequestString());
+
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
+                return null;
+
+            response = getResponseByInputStream(conn.getInputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
         return response;
     }
 
