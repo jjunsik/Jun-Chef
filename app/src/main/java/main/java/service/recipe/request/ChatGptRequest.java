@@ -27,9 +27,11 @@ public class ChatGptRequest extends CommonRequest {
 
     @Override
     public String toGetRequestString() {
-        return "?model="
-                +model
-                +"&prompt=";
+        return "?serviceKey=" + getKey() +
+                "&model=" + model +
+                "&prompt=" + prompt +
+                "&temperature=" + temperature +
+                "&max_tokens=" + max_tokens;
     }
 
     @Override
