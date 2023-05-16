@@ -32,7 +32,7 @@ public class HttpService {
 //            connection.setDoOutput(true);
 
             // header 정보 입력
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod(POST_METHOD_NAME);
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Authorization", "Bearer " + request.getKey());
 
@@ -51,6 +51,31 @@ public class HttpService {
             e.printStackTrace();
         }
 
+        return response;
+    }
+
+    public String get(CommonRequest request) {
+        String response = null;
+        HttpURLConnection conn = null;
+
+        try {
+            URL url = new URL(request.getUrl() + request.toGetRequestString());
+
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod(GET_METHOD_NAME);
+
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
+                return null;
+
+            response = getResponseByInputStream(conn.getInputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
         return response;
     }
 
@@ -76,35 +101,5 @@ public class HttpService {
             }
         }
         return stringBuilder.toString();
-    }
-
-    public String get(CommonRequest request) {
-        String response = null;
-        HttpURLConnection conn = null;
-
-        try {
-            URL url = new URL(request.getUrl() + request.toGetRequestString());
-
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
-                return null;
-
-            response = getResponseByInputStream(conn.getInputStream());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-        return response;
-    }
-
-    // TODO: 만들것
-    public String get() {
-        return "";
     }
 }
