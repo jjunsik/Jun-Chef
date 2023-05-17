@@ -7,6 +7,6 @@ import main.java.model.SearchHistory;
 public interface HistoryRepository {
     int getSearchHistoryCount();
     List<SearchHistory> getSearchHistoriesByLimit(int limit);
-    boolean addHistory(SearchHistory history);
+    void addHistory(SearchHistory history);
     void addSearchHistoryCount();
 }
