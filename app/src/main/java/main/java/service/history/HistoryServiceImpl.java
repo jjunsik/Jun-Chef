@@ -15,7 +15,16 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public List<SearchHistory> getSearchHistories(int limit) {
-        return null;
+        // 히스토리를 로컬 저장소에서 가져옴
+        int searchHistoryCount = historyRepository.getSearchHistoryCount();
+
+        if (searchHistoryCount == 0)
+            return null;
+
+        if (limit > searchHistoryCount)
+            return historyRepository.getSearchHistoriesByLimit(searchHistoryCount);
+
+        return historyRepository.getSearchHistoriesByLimit(limit);
     }
 
     @Override
