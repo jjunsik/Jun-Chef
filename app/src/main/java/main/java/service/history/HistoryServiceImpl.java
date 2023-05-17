@@ -29,6 +29,8 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public void addHistory(SearchHistory searchHistory) {
-
+        // 히스토리를 저장 (Local 저장소에)
+        historyRepository.addHistory(searchHistory);
+        historyRepository.addSearchHistoryCount();
     }
 }
