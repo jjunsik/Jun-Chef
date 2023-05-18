@@ -38,11 +38,27 @@ public class LocalHistoryRepository implements HistoryRepository {
     }
 
     @Override
-    public boolean addHistory(SearchHistory history) {
-        // history 저장하는 로직
-        // key: idx (count 기준) , value: class 자체 | class to string
-        // 2개 조회 ㄱㄴ? 1, 2 조회
-        return false;
+    public void addHistory(SearchHistory history) {
+        SharedPreferences historyRepository = context.getSharedPreferences("history", Context.MODE_PRIVATE);
+        SharedPreferences.Editor historyEditor = historyRepository.edit();
+
+        Gson gson = new Gson();
+        String jsonObject = gson.toJson(history); // SearchHistory 객체를 JSON 형태로 변환
+
+        // 새로 추가 되면 1(최신), limit(오래된)
+        // 꽉 차면 key 는 그대로고 value 가 한 칸 뒤로 밀려야 하고 첫번째 값에는 최신 검색어 ㅇㅇ
+
+        String nextValue;
+
+        if(getSearchHistoryCount() == MAX_COUNT) {
+            for(int i = 1; i < MAX_COUNT; i++) {
+                nextValue = historyRepository.getString("" + i, "");
+                historyEditor.putString("" + (i + 1), nextValue).apply();
+            }
+            historyEditor.putString("" + 1, jsonObject).apply(); // JSON 을 SharedPreferences 에 저장
+        } else{
+            historyEditor.putString("" + getSearchHistoryCount() + 1, jsonObject).apply();
+        }
     }
 
     @Override
