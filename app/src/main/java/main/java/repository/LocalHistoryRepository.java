@@ -63,7 +63,14 @@ public class LocalHistoryRepository implements HistoryRepository {
 
     @Override
     public void addSearchHistoryCount() {
-        // key: search_history_total_count 녀석 + 1
+        SharedPreferences searchHistoryCountRepository = context.getSharedPreferences("searchHistoryCount", Context.MODE_PRIVATE);
+        SharedPreferences.Editor searchHistoryCountEditor = searchHistoryCountRepository.edit();
+
+        int cnt = searchHistoryCountRepository.getInt("search_history_total_count", 0);
+
+        if (cnt < MAX_COUNT){
+            searchHistoryCountEditor.putInt("search_history_total_count", cnt + 1).apply();
+        }
     }
 
 }
