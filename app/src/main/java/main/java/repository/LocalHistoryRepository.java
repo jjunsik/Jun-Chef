@@ -24,7 +24,17 @@ public class LocalHistoryRepository implements HistoryRepository {
     @Override
     public List<SearchHistory> getSearchHistoriesByLimit(int limit) {
         // key: idx (count 기준), string to class
-        return null;
+        List<SearchHistory> histories = new LinkedList<>();
+
+        SharedPreferences historyRepository = context.getSharedPreferences("history", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+
+        for (int i = 1; i <= limit; i++) {
+            String json = historyRepository.getString("" + i, "없음");
+            SearchHistory searchHistoryObject = gson.fromJson(json, SearchHistory.class); // JSON 을 SearchHistory 객체로 변환
+            histories.add(searchHistoryObject);
+        }
+        return histories;
     }
 
     @Override
