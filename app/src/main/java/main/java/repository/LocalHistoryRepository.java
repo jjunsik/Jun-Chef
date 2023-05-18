@@ -72,5 +72,4 @@ public class LocalHistoryRepository implements HistoryRepository {
             searchHistoryCountEditor.putInt("search_history_total_count", cnt + 1).apply();
         }
     }
-
 }
