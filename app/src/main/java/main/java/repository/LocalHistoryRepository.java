@@ -1,14 +1,24 @@
 package main.java.repository;
 
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import main.java.model.SearchHistory;
 
 public class LocalHistoryRepository implements HistoryRepository {
+    int search_history_total_count = 0;
+    private Context context;
+    private final static int MAX_COUNT = 5;
+
     @Override
     public int getSearchHistoryCount() {
-        // key: search_history_total_count
-        return 0;
+        return context.getSharedPreferences("searchHistoryCount", Context.MODE_PRIVATE).getInt("search_history_total_count",0);
     }
 
     @Override
