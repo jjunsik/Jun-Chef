@@ -20,4 +20,9 @@
         android:textStyle="bold"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#673AB7"
+        />
+</LinearLayout>
