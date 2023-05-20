@@ -12,7 +12,6 @@ import java.util.List;
 import main.java.model.SearchHistory;
 
 public class LocalHistoryRepository implements HistoryRepository {
-    int search_history_total_count = 0;
     private final Context context;
     private final static int MAX_COUNT = 5;
 
@@ -21,7 +20,8 @@ public class LocalHistoryRepository implements HistoryRepository {
     }
     @Override
     public int getSearchHistoryCount() {
-        return context.getSharedPreferences("searchHistoryCount", Context.MODE_PRIVATE).getInt("search_history_total_count",0);
+        return context.getSharedPreferences("searchHistoryCount", Context.MODE_PRIVATE)
+                .getInt("search_history_total_count",0);
     }
 
     @Override
