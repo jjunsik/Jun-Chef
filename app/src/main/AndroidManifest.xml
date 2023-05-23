@@ -21,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".controller.SearchActivity" android:label="검색 화면" android:parentActivityName=".controller.MainActivity" />
+        <activity android:name=".controller.ResultActivity" android:label="결과 화면"  android:parentActivityName=".controller.SearchActivity" />
     </application>
 
 </manifest>
