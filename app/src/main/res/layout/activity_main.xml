@@ -28,17 +28,18 @@
         android:textStyle="bold"
         />
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#673AB7"
-        />
-    <TextView
-        android:id="@+id/item_test1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="aaa"
-        android:layout_margin="10dp"
-        />
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/startSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_gravity="bottom"
+            android:background="#9171CC"
+            android:text="시작하기" />
+    </LinearLayout>
 
 </LinearLayout>
