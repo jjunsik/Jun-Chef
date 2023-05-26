@@ -9,4 +9,8 @@ public interface HistoryRepository {
     List<SearchHistory> getSearchHistoriesByLimit(int limit);
     void addHistory(SearchHistory history);
     void addSearchHistoryCount();
+
+    void removeHistory(int index);
+
+    void subtractHistoryCount();
 }
