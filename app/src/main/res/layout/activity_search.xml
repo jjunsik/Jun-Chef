@@ -5,28 +5,37 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAD2">
+    android:background="#FAF7ED">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#9171CC"
-        />
+        android:background="#9171CC">
 
-    <androidx.appcompat.widget.SearchView
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_recipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            app:iconifiedByDefault="false"
+            app:queryHint="음식 이름을 입력하세요" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:focusable="true"
-        app:iconifiedByDefault="false"
-        app:queryHint="음식 이름을 입력하세요"
+        android:text="최근 검색 기록"
+        android:layout_margin = "15dp"
+        android:textAlignment="center"
+        android:textColor="#80000000"
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/history_item"
+        android:id="@+id/history_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         />
 
 </LinearLayout>
