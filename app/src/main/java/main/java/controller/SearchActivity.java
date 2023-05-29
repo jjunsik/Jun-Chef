@@ -33,7 +33,8 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(searchActivityToolbar);
 
         // 뒤로 가기 버튼 활성화
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar())
+                .setDisplayHomeAsUpEnabled(true);
 
         SearchView recipeSearch = findViewById(R.id.search_recipe);
 
