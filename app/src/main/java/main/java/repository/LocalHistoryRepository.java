@@ -50,17 +50,14 @@ public class LocalHistoryRepository implements HistoryRepository {
         // 새로 추가 되면 1(최신), limit(오래된)
         // 꽉 차면 key 는 그대로고 value 가 한 칸 뒤로 밀려야 하고 첫번째 값에는 최신 검색어 ㅇㅇ
 
-        String nextValue;
-
         if(getSearchHistoryCount() == MAX_COUNT) {
             for(int i = 1; i < MAX_COUNT; i++) {
                 nextValue = historyRepository.getString(String.valueOf(i), "");
                 historyEditor.putString(String.valueOf(i+1), nextValue).apply();
             }
-            historyEditor.putString("1", jsonObject).apply(); // JSON 을 SharedPreferences 에 저장
-        } else{
-            historyEditor.putString(String.valueOf(getSearchHistoryCount() + 1) , jsonObject).apply();
         }
+
+        historyEditor.putString("1", jsonObject).apply(); // JSON 을 SharedPreferences 에 저장
     }
 
     @Override
