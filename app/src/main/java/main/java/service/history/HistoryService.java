@@ -7,4 +7,5 @@ import main.java.model.SearchHistory;
 public interface HistoryService {
     List<SearchHistory> getSearchHistories(int limit);
     void addHistory(SearchHistory searchHistory);
+    void removeHistory(int index);
 }
