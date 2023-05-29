@@ -33,4 +33,12 @@ public class HistoryServiceImpl implements HistoryService {
         historyRepository.addHistory(searchHistory);
         historyRepository.addSearchHistoryCount();
     }
+
+    @Override
+    public void removeHistory(int index) {
+        // 히스토리를 삭제 (Local 저장소)
+        historyRepository.removeHistory(index);
+        historyRepository.subtractHistoryCount();
+    }
+
 }
