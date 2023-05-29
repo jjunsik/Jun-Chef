@@ -1,4 +1,4 @@
-package main.java.recyclerviewadapter;
+package main.java.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
