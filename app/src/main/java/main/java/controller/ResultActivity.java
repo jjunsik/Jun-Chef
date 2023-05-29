@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.Objects;
+
 import main.java.R;
 
 public class ResultActivity extends AppCompatActivity {
@@ -17,7 +19,7 @@ public class ResultActivity extends AppCompatActivity {
 
         Toolbar searchActivityToolbar = findViewById(R.id.result_toolbar);
         setSupportActionBar(searchActivityToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("검색 결과");
     }
 
