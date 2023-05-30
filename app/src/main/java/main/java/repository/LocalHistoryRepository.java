@@ -51,8 +51,15 @@ public class LocalHistoryRepository implements HistoryRepository {
         // 꽉 차면 key 는 그대로고 value 가 한 칸 뒤로 밀려야 하고 첫번째 값에는 최신 검색어 ㅇㅇ
 
         if(getSearchHistoryCount() == MAX_COUNT) {
-            for(int i = 1; i < MAX_COUNT; i++) {
-                nextValue = historyRepository.getString(String.valueOf(i), "");
+            for(int i = MAX_COUNT - 1; i > 0; i--) {
+                String nextValue = historyRepository.getString(String.valueOf(i), "");
+                historyEditor.putString(String.valueOf(i+1), nextValue).apply();
+            }
+        }
+
+        if(getSearchHistoryCount() >= 1 && getSearchHistoryCount() < MAX_COUNT){
+            for(int i = getSearchHistoryCount(); i > 0; i--){
+                String nextValue = historyRepository.getString(String.valueOf(i), "");
                 historyEditor.putString(String.valueOf(i+1), nextValue).apply();
             }
         }
