@@ -78,4 +78,38 @@ public class LocalHistoryRepository implements HistoryRepository {
             searchHistoryCountEditor.putInt("search_history_total_count", cnt + 1).apply();
         }
     }
+
+    @Override
+    public void removeHistory(int index) {
+
+        SharedPreferences historyRepository = context.getSharedPreferences("history", Context.MODE_PRIVATE);
+        SharedPreferences.Editor historyEditor = historyRepository.edit();
+
+        // 새로 추가 되면 1(최신), limit(오래된)
+        // 꽉 차면 key 는 그대로고 value 가 한 칸 뒤로 밀려야 하고 첫번째 값에는 최신 검색어 ㅇㅇ
+
+        if (getSearchHistoryCount() < MAX_COUNT && getSearchHistoryCount() > 1){
+            for(int i = index; i <= getSearchHistoryCount(); i++){
+                String nextValue = historyRepository.getString(String.valueOf(i+1), "");
+                historyEditor.putString(String.valueOf(i), nextValue).apply();
+            }
+        } else if (getSearchHistoryCount() == MAX_COUNT && index < getSearchHistoryCount()) {
+            for(int i = index; i < getSearchHistoryCount(); i++){
+                String nextValue = historyRepository.getString(String.valueOf(i+1), "");
+                historyEditor.putString(String.valueOf(i), nextValue).apply();
+            }
+        }
+
+        historyEditor.remove(String.valueOf(getSearchHistoryCount())).apply();
+    }
+
+    @Override
+    public void subtractHistoryCount(){
+        SharedPreferences searchHistoryCountRepository = context.getSharedPreferences("searchHistoryCount", Context.MODE_PRIVATE);
+        SharedPreferences.Editor searchHistoryCountEditor = searchHistoryCountRepository.edit();
+
+        int cnt = searchHistoryCountRepository.getInt("search_history_total_count", 0);
+
+        searchHistoryCountEditor.putInt("search_history_total_count", cnt-1).apply();
+    }
 }
