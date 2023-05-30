@@ -12,18 +12,28 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 import main.java.R;
 import main.java.model.SearchHistory;
-import main.java.recyclerviewadapter.HistoryRecyclerViewAdapter;
+import main.java.adapter.HistoryRecyclerViewAdapter;
+import main.java.model.SearchResult;
 import main.java.repository.HistoryRepository;
 import main.java.repository.LocalHistoryRepository;
 import main.java.service.history.HistoryService;
 import main.java.service.history.HistoryServiceImpl;
+import main.java.service.recipe.GptRecipeService;
+import main.java.service.recipe.RecipeService;
+import main.java.util.http.HttpService;
+import main.java.util.parser.GptResponseParser;
 
 public class SearchActivity extends AppCompatActivity {
     SearchHistory history;
     HistoryRepository historyRepository = new LocalHistoryRepository(this);
     HistoryService historyService = new HistoryServiceImpl(historyRepository);
+
+    RecipeService recipeService
+            = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +60,15 @@ public class SearchActivity extends AppCompatActivity {
 
                 Toast.makeText(SearchActivity.this, "입력한 검색어: " + query, Toast.LENGTH_SHORT).show();
 
+                SearchResult result = recipeService.search(query + " 레시피 알려줘");
+                if (result == null) {
+                    // error 처리
+                    //없음!
+                    return true;
+                }
+
                 Intent goToResultActivity = new Intent(getApplicationContext(), ResultActivity.class);
+                goToResultActivity.putExtra("recipe", result.getRecipeName());
                 startActivity(goToResultActivity);
                 return true;
             }
