@@ -60,10 +60,10 @@ public class SearchActivity extends AppCompatActivity {
 
                 Toast.makeText(SearchActivity.this, "입력한 검색어: " + query, Toast.LENGTH_SHORT).show();
 
-                SearchResult result = recipeService.search(query + " 레시피 알려줘");
+                SearchResult result = recipeService.search(query);
                 if (result == null) {
                     // error 처리
-                    //없음!
+                    // 없음!
                     return true;
                 }
 
