@@ -22,9 +22,10 @@ public abstract class RecipeService {
 
     public SearchResult search(String word) {
         String response;
+
         try {
             // http 통신을 통해 response 확인
-            response = httpService.post(new ChatGptRequest(word));
+            response = httpService.post(new ChatGptRequest(word + " 레시피"));
         } catch (Exception e) {
             // 애러 로직
             e.printStackTrace();
@@ -33,6 +34,8 @@ public abstract class RecipeService {
 
         // response 를 파싱하여 searchResult 에 저장
         SearchResult searchResult = resultParser.getSearchResultByResponse(response);
+
+        searchResult.setRecipeName(word);
 
         // 검색 결과룰 history 에 추가
         addHistory(searchResult);
