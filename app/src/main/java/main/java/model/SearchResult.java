@@ -1,7 +1,7 @@
 package main.java.model;
 
 public class SearchResult {
-    private final String recipeName;
+    private String recipeName;
     private final String[] ingredients;
     private final String[] cookingOrder;
 
@@ -21,6 +21,10 @@ public class SearchResult {
 
     public String[] getCookingOrder() {
         return cookingOrder;
+    }
+
+    public void setRecipeName(String recipeName){
+        this.recipeName = recipeName;
     }
 
     // TODO: ADD HISTORY 개발
