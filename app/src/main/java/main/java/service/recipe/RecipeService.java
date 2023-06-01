@@ -1,10 +1,12 @@
 package main.java.service.recipe;
 
+import android.util.Log;
+
+import main.java.BackgroundThread;
 import main.java.model.SearchResult;
-import main.java.service.recipe.request.ChatGptRequest;
+import main.java.service.history.HistoryService;
 import main.java.util.http.HttpService;
 import main.java.util.parser.ResultParser;
-import main.java.service.history.HistoryService;
 
 public abstract class RecipeService {
 
@@ -25,7 +27,20 @@ public abstract class RecipeService {
 
         try {
             // http 통신을 통해 response 확인
-            response = httpService.post(new ChatGptRequest(word + " 레시피"));
+            BackgroundThread gptBack = new BackgroundThread(word + " 레시피");
+            Thread gptThread = new Thread(gptBack);
+
+            gptThread.start();
+
+            try {
+                gptThread.join();
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+
+            response = gptBack.getResponse();
+
+            Log.d("TAG", "search: 통신 성공!" + response);
         } catch (Exception e) {
             // 애러 로직
             Log.d("TAG", "통신 실패!");
