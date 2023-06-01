@@ -1,5 +1,7 @@
 package main.java.util.parser;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +12,8 @@ public class GptResponseParser implements ResultParser{
     @Override
     public SearchResult getSearchResultByResponse(String response) {
         // TODO: 파싱!
+        String[] ingredients = null;
+        String[] cookingOrder = null;
 
         try {
             JSONObject responseJSON = new JSONObject(response);
@@ -22,6 +26,6 @@ public class GptResponseParser implements ResultParser{
             throw new RuntimeException(e);
         }
 
-        return null;
+        return new SearchResult("음식 이름", ingredients, cookingOrder);
     }
 }
