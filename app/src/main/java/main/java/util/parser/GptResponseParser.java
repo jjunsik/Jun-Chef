@@ -21,6 +21,7 @@ public class GptResponseParser implements ResultParser{
 
             JSONObject responseArrayJSON = responseArray.getJSONObject(0);
             String responseText = responseArrayJSON.getString("text").trim();
+            Log.d("TAG", "getSearchResultByResponse: " + responseText);
 
         } catch (JSONException e) {
             throw new RuntimeException(e);

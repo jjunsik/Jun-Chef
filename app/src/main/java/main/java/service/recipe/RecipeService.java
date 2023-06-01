@@ -28,6 +28,7 @@ public abstract class RecipeService {
             response = httpService.post(new ChatGptRequest(word + " 레시피"));
         } catch (Exception e) {
             // 애러 로직
+            Log.d("TAG", "통신 실패!");
             e.printStackTrace();
             return null;
         }
@@ -36,7 +37,7 @@ public abstract class RecipeService {
         SearchResult searchResult = resultParser.getSearchResultByResponse(response);
 
         searchResult.setRecipeName(word);
-
+        Log.d("TAG", "레시피명 입력 성공!" + word);
         // 검색 결과룰 history 에 추가
         addHistory(searchResult);
 
