@@ -2,7 +2,6 @@ package main.java.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Objects;
 
 import main.java.R;
-import main.java.model.SearchHistory;
 import main.java.adapter.HistoryRecyclerViewAdapter;
 import main.java.model.SearchResult;
 import main.java.repository.HistoryRepository;
@@ -28,7 +26,6 @@ import main.java.util.http.HttpService;
 import main.java.util.parser.GptResponseParser;
 
 public class SearchActivity extends AppCompatActivity {
-    SearchHistory history;
     HistoryRepository historyRepository = new LocalHistoryRepository(this);
     HistoryService historyService = new HistoryServiceImpl(historyRepository);
 
