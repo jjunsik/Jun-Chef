@@ -77,11 +77,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView historyRecyclerView = findViewById(R.id.history_items);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (historyRepository.getSearchHistoryCount() == 0) {
-            Log.d("TAG", "Nothing, historyRepository의 카운트: " + historyRepository.getSearchHistoryCount());
-        }else {
-            Log.d("TAG", "historyRepository의 카운트: " + historyRepository.getSearchHistoryCount());
-
+        if (historyRepository.getSearchHistoryCount() != 0) {
             HistoryRecyclerViewAdapter historyAdapter = new HistoryRecyclerViewAdapter(historyService.getSearchHistories(5), this);
             historyRecyclerView.setAdapter(historyAdapter);
         }
