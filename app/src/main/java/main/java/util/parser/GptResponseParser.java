@@ -12,8 +12,8 @@ public class GptResponseParser implements ResultParser{
     @Override
     public SearchResult getSearchResultByResponse(String response) {
         // TODO: 파싱!
-        String[] ingredients = null;
-        String[] cookingOrder = null;
+        String ingredients = "재료";
+        String cookingOrder = "만드는 방법";
 
         try {
             JSONObject responseJSON = new JSONObject(response);
