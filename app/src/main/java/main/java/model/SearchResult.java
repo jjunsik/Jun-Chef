@@ -2,10 +2,10 @@ package main.java.model;
 
 public class SearchResult {
     private String recipeName;
-    private final String[] ingredients;
-    private final String[] cookingOrder;
+    private final String ingredients;
+    private final String cookingOrder;
 
-    public SearchResult(String recipeName, String[] ingredients, String[] cookingOrder) {
+    public SearchResult(String recipeName, String ingredients, String cookingOrder) {
         this.recipeName = recipeName;
         this.ingredients = ingredients;
         this.cookingOrder = cookingOrder;
@@ -15,11 +15,11 @@ public class SearchResult {
         return recipeName;
     }
 
-    public String[] getIngredients() {
+    public String getIngredients() {
         return ingredients;
     }
 
-    public String[] getCookingOrder() {
+    public String getCookingOrder() {
         return cookingOrder;
     }
 
