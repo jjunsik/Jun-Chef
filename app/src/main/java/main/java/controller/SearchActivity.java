@@ -52,9 +52,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // 검색 버튼을 클릭 시 호출
-                history = new SearchHistory(query);
-                historyService.addHistory(history);
-
                 Toast.makeText(SearchActivity.this, "입력한 검색어: " + query, Toast.LENGTH_SHORT).show();
 
                 SearchResult result = recipeService.search(query);
