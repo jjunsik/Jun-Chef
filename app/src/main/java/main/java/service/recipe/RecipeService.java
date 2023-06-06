@@ -52,7 +52,9 @@ public abstract class RecipeService {
         SearchResult searchResult = resultParser.getSearchResultByResponse(response);
 
         searchResult.setRecipeName(word);
-        Log.d("TAG", "레시피명 입력 성공!" + word);
+        Log.d("TAG", "레시피명 입력 성공!" + searchResult.getRecipeName());
+        Log.d("TAG", "재료 입력 성공!" + searchResult.getIngredients());
+        Log.d("TAG", "만드는 방법 입력 성공!" + searchResult.getCookingOrder());
         // 검색 결과룰 history 에 추가
         addHistory(searchResult);
 
