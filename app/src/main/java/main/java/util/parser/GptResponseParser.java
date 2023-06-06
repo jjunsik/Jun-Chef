@@ -23,6 +23,11 @@ public class GptResponseParser implements ResultParser{
             String responseText = responseArrayJSON.getString("text").trim();
             Log.d("TAG", "getSearchResultByResponse: " + responseText);
 
+            String[] splitText = responseText.split("재료");
+
+            ingredients += splitText[1].split("레시피")[0];
+            cookingOrder += splitText[1].split("레시피")[1];
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
