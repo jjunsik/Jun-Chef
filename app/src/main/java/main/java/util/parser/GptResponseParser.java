@@ -8,8 +8,8 @@ public class GptResponseParser implements ResultParser{
     @Override
     public SearchResult getSearchResultByResponse(String response) {
         // TODO: 파싱!
-        String ingredients = "재료";
-        String cookingOrder = "만드는 방법";
+        StringBuilder ingredients = new StringBuilder("[재료]");
+        StringBuilder cookingOrder = new StringBuilder("[만드는 방법]");
 
         Gson gson = new Gson();
         GptResponseDto responseDto = gson.fromJson(response, GptResponseDto.class);
@@ -27,6 +27,6 @@ public class GptResponseParser implements ResultParser{
             throw new RuntimeException(e);
         }
 
-        return new SearchResult("음식 이름", ingredients, cookingOrder);
+        return new SearchResult("음식 이름", ingredients.toString(), cookingOrder.toString());
     }
 }
