@@ -3,6 +3,8 @@ package main.java.util.parser;
 import com.google.gson.Gson;
 
 import main.java.model.SearchResult;
+import main.java.util.parser.dto.GptResponseChoicesDto;
+import main.java.util.parser.dto.GptResponseDto;
 
 public class GptResponseParser implements ResultParser{
     @Override
@@ -14,9 +16,9 @@ public class GptResponseParser implements ResultParser{
         Gson gson = new Gson();
         GptResponseDto responseDto = gson.fromJson(response, GptResponseDto.class);
 
-            JSONObject responseArrayJSON = responseArray.getJSONObject(0);
-            String responseText = responseArrayJSON.getString("text").trim();
-            Log.d("TAG", "getSearchResultByResponse: " + responseText);
+        // responseDto, choiceDto, splitText 등의 객체가 null인지 확인
+        if (responseDto != null && responseDto.getChoices() != null && !responseDto.getChoices().isEmpty()) {
+            GptResponseChoicesDto choiceDto = responseDto.getChoices().get(0);
 
             String[] splitText = responseText.split("재료");
 
