@@ -1,10 +1,6 @@
 package main.java.util.parser;
 
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import main.java.model.SearchResult;
 
@@ -15,9 +11,8 @@ public class GptResponseParser implements ResultParser{
         String ingredients = "재료";
         String cookingOrder = "만드는 방법";
 
-        try {
-            JSONObject responseJSON = new JSONObject(response);
-            JSONArray responseArray = responseJSON.getJSONArray("choices");
+        Gson gson = new Gson();
+        GptResponseDto responseDto = gson.fromJson(response, GptResponseDto.class);
 
             JSONObject responseArrayJSON = responseArray.getJSONObject(0);
             String responseText = responseArrayJSON.getString("text").trim();
