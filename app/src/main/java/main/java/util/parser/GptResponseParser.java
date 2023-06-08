@@ -24,8 +24,11 @@ public class GptResponseParser implements ResultParser{
                 String choiceText = choiceDto.getText().trim();
                 String[] splitText = choiceText.split("[재료]");
 
-            ingredients += splitText[1].split("레시피")[0];
-            cookingOrder += splitText[1].split("레시피")[1];
+                if (splitText.length > 1) {
+                    ingredients.append("\n").append(splitText[1].split("[레시피]")[0].replace("\n\n", "\n").trim());
+                    cookingOrder.append("\n").append(splitText[1].split("[레시피]")[1].replace("\n\n", "\n").trim());
+                }
+            }
 
         } catch (JSONException e) {
             throw new RuntimeException(e);
