@@ -30,8 +30,6 @@ public class GptResponseParser implements ResultParser{
                 }
             }
 
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return new SearchResult("음식 이름", ingredients.toString(), cookingOrder.toString());
