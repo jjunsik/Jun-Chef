@@ -20,7 +20,9 @@ public class GptResponseParser implements ResultParser{
         if (responseDto != null && responseDto.getChoices() != null && !responseDto.getChoices().isEmpty()) {
             GptResponseChoicesDto choiceDto = responseDto.getChoices().get(0);
 
-            String[] splitText = responseText.split("재료");
+            if (choiceDto != null) {
+                String choiceText = choiceDto.getText().trim();
+                String[] splitText = choiceText.split("[재료]");
 
             ingredients += splitText[1].split("레시피")[0];
             cookingOrder += splitText[1].split("레시피")[1];
