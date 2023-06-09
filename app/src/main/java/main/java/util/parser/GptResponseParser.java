@@ -14,7 +14,9 @@ public class GptResponseParser implements ResultParser{
         StringBuilder cookingOrder = new StringBuilder("[만드는 방법]");
 
         Gson gson = new Gson();
-        GptResponseDto responseDto = gson.fromJson(response, GptResponseDto.class);
+        try {
+        // 받은 response를 GptResponseDto 클래스 형식으로 파싱
+            GptResponseDto responseDto = gson.fromJson(response, GptResponseDto.class);
 
         // responseDto, choiceDto, splitText 등의 객체가 null인지 확인
         if (responseDto != null && responseDto.getChoices() != null && !responseDto.getChoices().isEmpty()) {
@@ -30,6 +32,9 @@ public class GptResponseParser implements ResultParser{
                 }
             }
 
+        } catch (Exception e) {
+            // 기타 예외 처리
+            e.printStackTrace();
         }
 
         return new SearchResult("음식 이름", ingredients.toString(), cookingOrder.toString());
