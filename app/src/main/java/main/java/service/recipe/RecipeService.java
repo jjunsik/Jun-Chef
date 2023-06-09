@@ -27,7 +27,7 @@ public abstract class RecipeService {
 
         try {
             // http 통신을 통해 response 확인
-            BackgroundThread gptBack = new BackgroundThread(word + " 레시피");
+            BackgroundThread gptBack = new BackgroundThread(word);
             Thread gptThread = new Thread(gptBack);
 
             gptThread.start();
@@ -52,9 +52,9 @@ public abstract class RecipeService {
         SearchResult searchResult = resultParser.getSearchResultByResponse(response);
 
         searchResult.setRecipeName(word);
-        Log.d("TAG", "레시피명 입력 성공!" + searchResult.getRecipeName());
-        Log.d("TAG", "재료 입력 성공!" + searchResult.getIngredients());
-        Log.d("TAG", "만드는 방법 입력 성공!" + searchResult.getCookingOrder());
+        Log.d("TAG", "레시피명 입력 성공! \n" + searchResult.getRecipeName());
+        Log.d("TAG", "재료 입력 성공! \n" + searchResult.getIngredients());
+        Log.d("TAG", "만드는 방법 입력 성공! \n" + searchResult.getCookingOrder());
         // 검색 결과룰 history 에 추가
         addHistory(searchResult);
 
