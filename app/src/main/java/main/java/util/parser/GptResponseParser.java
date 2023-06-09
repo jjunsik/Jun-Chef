@@ -1,10 +1,12 @@
 package main.java.util.parser;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import main.java.model.SearchResult;
 import main.java.util.parser.dto.GptResponseChoicesDto;
 import main.java.util.parser.dto.GptResponseDto;
+import main.java.util.parser.dto.GptResponseMessageDto;
 
 public class GptResponseParser implements ResultParser{
     @Override
@@ -36,11 +38,18 @@ public class GptResponseParser implements ResultParser{
                         String regex = "\\[(재료|레시피)\\]";
                         String[] splitContent = msgContent.split(regex);
 
-                if (splitText.length > 1) {
-                    ingredients.append("\n").append(splitText[1].split("[레시피]")[0].replace("\n\n", "\n").trim());
-                    cookingOrder.append("\n").append(splitText[1].split("[레시피]")[1].replace("\n\n", "\n").trim());
+                        // 분할된 문자열의 길이가 3인 경우(0번째 -> \n, 1번째 -> [재료], 2번째 -> [레시피]), [재료]와 [레시피]의 값을 추출
+                        if (splitContent.length == 3) {
+                            ingredients.append("\n").append(splitContent[1].replace("\n\n", "\n").trim());
+                            cookingOrder.append("\n").append(splitContent[2].replace("\n\n", "\n").trim());
+                        }
+                    }
                 }
             }
+        } catch (JsonSyntaxException e) {
+            // JSON 파싱 오류 처리
+            // 예외를 기록하거나 오류 메시지를 출력
+            e.printStackTrace();
 
         } catch (Exception e) {
             // 기타 예외 처리
