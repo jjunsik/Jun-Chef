@@ -11,10 +11,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
 import java.util.Objects;
 
 import main.java.R;
 import main.java.adapter.HistoryRecyclerViewAdapter;
+import main.java.model.SearchHistory;
 import main.java.model.SearchResult;
 import main.java.repository.HistoryRepository;
 import main.java.repository.LocalHistoryRepository;
@@ -28,6 +30,8 @@ import main.java.util.parser.GptResponseParser;
 public class SearchActivity extends AppCompatActivity {
     HistoryRepository historyRepository = new LocalHistoryRepository(this);
     HistoryService historyService = new HistoryServiceImpl(historyRepository);
+
+    HistoryRecyclerViewAdapter historyAdapter;
 
     RecipeService recipeService
             = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
@@ -48,6 +52,17 @@ public class SearchActivity extends AppCompatActivity {
         // SearchView 옆에 검색 버튼 활성화
         recipeSearch.setSubmitButtonEnabled(true);
 
+        RecyclerView historyRecyclerView = findViewById(R.id.history_items);
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        if (historyAdapter == null) {
+            List<SearchHistory> searchHistories = historyService.getSearchHistories(5);
+            if (searchHistories != null) { // null 체크
+                historyAdapter = new HistoryRecyclerViewAdapter(searchHistories, SearchActivity.this);
+                historyRecyclerView.setAdapter(historyAdapter);
+            }
+        }
+
         recipeSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -61,9 +76,15 @@ public class SearchActivity extends AppCompatActivity {
                     return true;
                 }
 
+                if (historyRepository.getSearchHistoryCount() != 0) {
+                    historyAdapter = new HistoryRecyclerViewAdapter(historyService.getSearchHistories(5), SearchActivity.this);
+                    historyRecyclerView.setAdapter(historyAdapter);
+                }
+
                 Intent goToResultActivity = new Intent(getApplicationContext(), ResultActivity.class);
                 goToResultActivity.putExtra("recipe", result.getRecipeName());
                 startActivity(goToResultActivity);
+
                 return true;
             }
 
@@ -73,14 +94,6 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        RecyclerView historyRecyclerView = findViewById(R.id.history_items);
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        if (historyRepository.getSearchHistoryCount() != 0) {
-            HistoryRecyclerViewAdapter historyAdapter = new HistoryRecyclerViewAdapter(historyService.getSearchHistories(5), this);
-            historyRecyclerView.setAdapter(historyAdapter);
-        }
     }
 
     @Override
