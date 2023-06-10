@@ -51,6 +51,10 @@ public abstract class RecipeService {
         // response 를 파싱하여 searchResult 에 저장
         SearchResult searchResult = resultParser.getSearchResultByResponse(response);
 
+        // 검색 결과가 파싱이 불가능한 형태일 경우
+        if (searchResult == null)
+            return null;
+
         searchResult.setRecipeName(word);
         Log.d("TAG", "레시피명 입력 성공! \n" + searchResult.getRecipeName());
         Log.d("TAG", "재료 입력 성공! \n" + searchResult.getIngredients());
