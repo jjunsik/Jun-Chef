@@ -9,6 +9,10 @@ import main.java.util.parser.dto.GptResponseDto;
 import main.java.util.parser.dto.GptResponseMessageDto;
 
 public class GptResponseParser implements ResultParser{
+
+    public static final String RECIPE_NAME_TITLE = "음식 이름";
+    public static final String INGREDIENT_RECIPE_REGEX = "\\[(재료|레시피)\\]";
+
     @Override
     public SearchResult getSearchResultByResponse(String response) {
         // TODO: 파싱!
@@ -17,34 +21,38 @@ public class GptResponseParser implements ResultParser{
 
         Gson gson = new Gson();
         try {
-        // 받은 response를 GptResponseDto 클래스 형식으로 파싱
+            // 받은 response 를 GptResponseDto 클래스 형식으로 파싱
             GptResponseDto responseDto = gson.fromJson(response, GptResponseDto.class);
 
-            // responseDto, choiceDto, splitText 등의 객체가 null인지 확인
-            if (responseDto != null && responseDto.getChoices() != null && !responseDto.getChoices().isEmpty()) {
+            // responseDto, choiceDto, splitText 등의 객체가 null 인지 확인
+            if (responseDto == null ||
+                    responseDto.getChoices() == null ||
+                    responseDto.getChoices().isEmpty())
+                return null;
 
-                // responseDto에서 첫 번째 choice를 가져옴
-                GptResponseChoicesDto choiceDto = responseDto.getChoices().get(0);
+            // responseDto에서 첫 번째 choice를 가져옴
+            GptResponseChoicesDto choiceDto = responseDto.getChoices().get(0);
 
-                if (choiceDto != null) {
-                    // choiceDto에서 message를 가져옴
-                    GptResponseMessageDto messageDto = choiceDto.getMessage();
+            if (choiceDto == null)
+                return null;
 
-                    if (messageDto != null) {
-                        // messageDto에서 content 값을 가져옴
-                        String msgContent = messageDto.getContent().trim();
+            // choiceDto에서 message를 가져옴
+            GptResponseMessageDto messageDto = choiceDto.getMessage();
+
+            if (messageDto == null)
+                return null;
+
+            // messageDto에서 content 값을 가져옴
+            String msgContent = messageDto.getContent().trim();
 
                         // 정규식을 사용하여 [재료]와 [레시피]로 문자열을 분할
                         String regex = "\\[(재료|레시피)\\]";
                         String[] splitContent = msgContent.split(regex);
 
-                        // 분할된 문자열의 길이가 3인 경우(0번째 -> \n, 1번째 -> [재료], 2번째 -> [레시피]), [재료]와 [레시피]의 값을 추출
-                        if (splitContent.length == 3) {
-                            ingredients.append("\n").append(splitContent[1].replace("\n\n", "\n").trim());
-                            cookingOrder.append("\n").append(splitContent[2].replace("\n\n", "\n").trim());
-                        }
-                    }
-                }
+            // 분할된 문자열의 길이가 3인 경우(0번째 -> \n, 1번째 -> [재료], 2번째 -> [레시피]), [재료]와 [레시피]의 값을 추출
+            if (splitContent.length == 3) {
+                ingredients.append("\n").append(splitContent[1].replace("\n\n", "\n").trim());
+                cookingOrder.append("\n").append(splitContent[2].replace("\n\n", "\n").trim());
             }
         } catch (JsonSyntaxException e) {
             // JSON 파싱 오류 처리
