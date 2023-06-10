@@ -58,9 +58,7 @@ public class GptResponseParser implements ResultParser{
             // 예외를 기록하거나 오류 메시지를 출력
             e.printStackTrace();
 
-        } catch (Exception e) {
-            // 기타 예외 처리
-            e.printStackTrace();
+            return null;
         }
 
         return new SearchResult(RECIPE_NAME_TITLE, ingredients.toString(), cookingOrder.toString());
