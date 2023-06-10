@@ -45,9 +45,8 @@ public class GptResponseParser implements ResultParser{
             // messageDto에서 content 값을 가져옴
             String msgContent = messageDto.getContent().trim();
 
-                        // 정규식을 사용하여 [재료]와 [레시피]로 문자열을 분할
-                        String regex = "\\[(재료|레시피)\\]";
-                        String[] splitContent = msgContent.split(regex);
+            // 정규식을 사용하여 [재료]와 [레시피]로 문자열을 분할
+            String[] splitContent = msgContent.split(INGREDIENT_RECIPE_REGEX);
 
             // 분할된 문자열의 길이가 3인 경우(0번째 -> \n, 1번째 -> [재료], 2번째 -> [레시피]), [재료]와 [레시피]의 값을 추출
             if (splitContent.length == 3) {
@@ -64,6 +63,6 @@ public class GptResponseParser implements ResultParser{
             e.printStackTrace();
         }
 
-        return new SearchResult("음식 이름", ingredients.toString(), cookingOrder.toString());
+        return new SearchResult(RECIPE_NAME_TITLE, ingredients.toString(), cookingOrder.toString());
     }
 }
