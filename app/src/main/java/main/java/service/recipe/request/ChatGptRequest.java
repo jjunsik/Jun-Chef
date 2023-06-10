@@ -1,37 +1,30 @@
 package main.java.service.recipe.request;
 
+import java.util.List;
+
 import main.java.util.http.request.CommonRequest;
 
 public class ChatGptRequest extends CommonRequest {
 
     private static final String CHAT_GPT_KEY = "API_KEY";
-    private static final String CHAT_GPT_URL = "https://api.openai.com/v1/completions";
-    private final String model = "text-davinci-003";
-    private final String prompt;
-    private final Float temperature = 0.3f;
-    private final Integer max_tokens = 1000;
+    private static final String CHAT_GPT_URL = "https://api.openai.com/v1/chat/completions";
+    private final String model = "gpt-3.5-turbo";
+    private final List<String> messages;
 
-    public ChatGptRequest(String question) {
-        this.prompt = question;
+    public ChatGptRequest(List<String> messages) {
+        this.messages = messages;
     }
 
     @Override
     public String toPostRequestString() {
-        return '{' +
-                "\"model\":\"" + model + '\"' +
-                ",\"prompt\":\"" + prompt + '\"' +
-                ",\"temperature\":" + temperature +
-                ",\"max_tokens\":" + max_tokens +
-                '}';
+        return "{\"model\":\"" + model + "\"" + ",\"messages\":" + messages + "}";
     }
 
     @Override
     public String toGetRequestString() {
         return "?serviceKey=" + getKey() +
                 "&model=" + model +
-                "&prompt=" + prompt +
-                "&temperature=" + temperature +
-                "&max_tokens=" + max_tokens;
+                "&messages=" + messages;
     }
 
     @Override
