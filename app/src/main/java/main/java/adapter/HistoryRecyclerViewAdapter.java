@@ -63,6 +63,15 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, (itemIdx + 1)+"번째 텍스트 뷰 클릭", Toast.LENGTH_SHORT).show();
+                SearchResult result = recipeService.search(historyItemList.get(itemIdx).getRecipeName());
+
+                if (result == null) {
+                    // UI 예외 처리
+                }
+
+                Intent goToResultActivity = new Intent(context, ResultActivity.class);
+                goToResultActivity.putExtra("recipe", result.getRecipeName());
+                context.startActivity(goToResultActivity);
             }
         });
 
