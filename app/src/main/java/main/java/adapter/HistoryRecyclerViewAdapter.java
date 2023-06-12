@@ -1,6 +1,7 @@
 package main.java.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import main.java.R;
+import main.java.controller.ResultActivity;
 import main.java.model.SearchHistory;
+import main.java.model.SearchResult;
 import main.java.repository.HistoryRepository;
 import main.java.repository.LocalHistoryRepository;
 import main.java.service.history.HistoryService;
 import main.java.service.history.HistoryServiceImpl;
+import main.java.service.recipe.GptRecipeService;
+import main.java.service.recipe.RecipeService;
+import main.java.util.http.HttpService;
+import main.java.util.parser.GptResponseParser;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -42,6 +49,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         HistoryRepository historyRepository = new LocalHistoryRepository(context);
         HistoryService historyService = new HistoryServiceImpl(historyRepository);
+        RecipeService recipeService
+                = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
 
         int itemIdx = holder.getAdapterPosition();
 
