@@ -27,7 +27,7 @@ public class BackgroundThread implements Runnable {
         message.add(gson.toJson(requestMessage));
 
         //http
-        response = new HttpService().post(new ChatGptRequest(word + " 레시피"));
+        response = new HttpService().post(new ChatGptRequest(message));
     }
 
     public String getResponse() {
