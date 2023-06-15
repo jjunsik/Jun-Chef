@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 
 import main.java.R;
 import main.java.controller.ResultActivity;
@@ -69,8 +70,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     // UI 예외 처리
                 }
 
+
                 Intent goToResultActivity = new Intent(context, ResultActivity.class);
-                goToResultActivity.putExtra("recipe", result.getRecipeName());
+                goToResultActivity.putExtra("recipeName", Objects.requireNonNull(result).getRecipeName());
                 context.startActivity(goToResultActivity);
             }
         });
