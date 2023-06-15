@@ -82,7 +82,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
 
                 Intent goToResultActivity = new Intent(getApplicationContext(), ResultActivity.class);
-                goToResultActivity.putExtra("recipe", result.getRecipeName());
+                goToResultActivity.putExtra("recipeName", result.getRecipeName());
                 startActivity(goToResultActivity);
 
                 return true;
