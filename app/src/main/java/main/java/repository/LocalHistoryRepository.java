@@ -42,13 +42,30 @@ public class LocalHistoryRepository implements HistoryRepository {
 
     @Override
     public void addHistory(SearchHistory history) {
+        HistoryService historyService = new HistoryServiceImpl(new LocalHistoryRepository(context));
+
         SharedPreferences historyRepository = context.getSharedPreferences("history", Context.MODE_PRIVATE);
         SharedPreferences.Editor historyEditor = historyRepository.edit();
 
         Gson gson = new Gson();
-        String jsonObject = gson.toJson(history); // SearchHistory 객체를 JSON 형태로 변환
-        // 새로 추가 되면 1(최신), limit(오래된)
-        // 꽉 차면 key 는 그대로고 value 가 한 칸 뒤로 밀려야 하고 첫번째 값에는 최신 검색어 ㅇㅇ
+        String historyObject = gson.toJson(history); // SearchHistory 객체를 JSON 형태로 변환
+
+        // 중복 확인
+        String check;
+        String checkSplit;
+        String historyReplace =history.getRecipeName().replace(" ", "");
+
+        for(int i = 1; i < getSearchHistoryCount() + 1; i ++){
+            check = historyRepository.getString(String.valueOf(i), "");
+            checkSplit = check.substring(40, check.indexOf("\"}")).replace(" ", "");
+            Log.d("TAG", "check: " + check);
+            Log.d("TAG", "checkSplit: " + checkSplit);
+            Log.d("TAG", "historyReplace: " + historyReplace);
+            if(checkSplit.equals(historyReplace)){
+                historyService.removeHistory(i);
+                break;
+            }
+        }
 
         if(getSearchHistoryCount() == MAX_COUNT) {
             for(int i = MAX_COUNT - 1; i > 0; i--) {
@@ -64,7 +81,7 @@ public class LocalHistoryRepository implements HistoryRepository {
             }
         }
 
-        historyEditor.putString("1", jsonObject).apply(); // JSON 을 SharedPreferences 에 저장
+        historyEditor.putString("1", historyObject).apply(); // JSON 을 SharedPreferences 에 저장
     }
 
     @Override
@@ -84,9 +101,6 @@ public class LocalHistoryRepository implements HistoryRepository {
 
         SharedPreferences historyRepository = context.getSharedPreferences("history", Context.MODE_PRIVATE);
         SharedPreferences.Editor historyEditor = historyRepository.edit();
-
-        // 새로 추가 되면 1(최신), limit(오래된)
-        // 꽉 차면 key 는 그대로고 value 가 한 칸 뒤로 밀려야 하고 첫번째 값에는 최신 검색어 ㅇㅇ
 
         if (getSearchHistoryCount() < MAX_COUNT && getSearchHistoryCount() > 1){
             for(int i = index; i <= getSearchHistoryCount(); i++){
