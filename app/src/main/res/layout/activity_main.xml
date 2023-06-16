@@ -39,7 +39,8 @@
             android:layout_margin="20dp"
             android:layout_gravity="bottom"
             android:background="#9171CC"
-            android:text="시작하기" />
+            android:text="시작하기"
+            android:textColor="#FFFFFF"/>
     </LinearLayout>
 
 </LinearLayout>
