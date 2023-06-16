@@ -3,6 +3,7 @@ package main.java.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -10,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import main.java.model.SearchHistory;
+import main.java.service.history.HistoryService;
+import main.java.service.history.HistoryServiceImpl;
 
 public class LocalHistoryRepository implements HistoryRepository {
     private final Context context;
