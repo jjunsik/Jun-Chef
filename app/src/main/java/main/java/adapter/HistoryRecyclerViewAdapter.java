@@ -70,9 +70,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     // UI 예외 처리
                 }
 
-
                 Intent goToResultActivity = new Intent(context, ResultActivity.class);
                 goToResultActivity.putExtra("recipeName", Objects.requireNonNull(result).getRecipeName());
+                goToResultActivity.putExtra("ingredients", Objects.requireNonNull(result).getIngredients());
+                goToResultActivity.putExtra("cookingOrder", Objects.requireNonNull(result).getCookingOrder());
                 context.startActivity(goToResultActivity);
             }
         });
