@@ -1,5 +1,9 @@
 package main.java.controller;
 
+import static main.java.model.constant.ResultConstant.COOKING_ORDER;
+import static main.java.model.constant.ResultConstant.INGREDIENTS;
+import static main.java.model.constant.ResultConstant.RECIPE_NAME;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -64,10 +68,24 @@ public class SearchActivity extends AppCompatActivity {
         historyAdapter = new HistoryRecyclerViewAdapter(searchHistories, SearchActivity.this);
         historyRecyclerView.setAdapter(historyAdapter);
 
+        recipeSearch.setOnQueryTextListener(getOnQueryTextListener(loadingDialog, historyRecyclerView));
+    }
+
+    private SearchView.OnQueryTextListener getOnQueryTextListener(LoadingDialog loadingDialog,
+                                                                  RecyclerView historyRecyclerView){
+        return new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // 검색 버튼을 클릭 시 호출
+                loadingDialog.startLoadingDialog();
+                Toast.makeText(SearchActivity.this, "입력한 검색어: " + query, Toast.LENGTH_SHORT).show();
+
                 SearchResult result = recipeService.search(query);
+
                 if (result == null) {
                     // error 처리
                     // 없음!
+                    loadingDialog.dismissDialog();
                     return true;
                 }
 
@@ -77,7 +95,9 @@ public class SearchActivity extends AppCompatActivity {
                 }
 
                 Intent goToResultActivity = new Intent(getApplicationContext(), ResultActivity.class);
-                goToResultActivity.putExtra("recipeName", result.getRecipeName());
+                goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
+                goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
+                goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
                 startActivity(goToResultActivity);
 
                 return true;
@@ -88,7 +108,7 @@ public class SearchActivity extends AppCompatActivity {
                 // 입력한 텍스트가 변경될 때마다 호출
                 return true;
             }
-        });
+        };
     }
 
     @Override
