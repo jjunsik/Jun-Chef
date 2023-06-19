@@ -55,19 +55,14 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView historyRecyclerView = findViewById(R.id.history_items);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (historyAdapter == null) {
-            List<SearchHistory> searchHistories = historyService.getSearchHistories(5);
-            if (searchHistories != null) { // null 체크
-                historyAdapter = new HistoryRecyclerViewAdapter(searchHistories, SearchActivity.this);
-                historyRecyclerView.setAdapter(historyAdapter);
-            }
-        }
+        if (historyAdapter != null)
+            return;
+        List<SearchHistory> searchHistories = historyService.getSearchHistories(5);
 
-        recipeSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // 검색 버튼을 클릭 시 호출
-                Toast.makeText(SearchActivity.this, "입력한 검색어: " + query, Toast.LENGTH_SHORT).show();
+        if (searchHistories == null)
+            return;
+        historyAdapter = new HistoryRecyclerViewAdapter(searchHistories, SearchActivity.this);
+        historyRecyclerView.setAdapter(historyAdapter);
 
                 SearchResult result = recipeService.search(query);
                 if (result == null) {
