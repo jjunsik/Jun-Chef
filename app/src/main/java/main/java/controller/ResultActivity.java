@@ -12,6 +12,11 @@ import java.util.Objects;
 import main.java.R;
 
 public class ResultActivity extends AppCompatActivity {
+    public static final String SEARCH_RESULT_TITLE = "검색 결과";
+    TextView recipeNameTextView, ingredientsTextView, cookingOrderTextView;
+
+    OnBackPressedCallback callback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,12 +25,12 @@ public class ResultActivity extends AppCompatActivity {
         Toolbar searchActivityToolbar = findViewById(R.id.result_toolbar);
         setSupportActionBar(searchActivityToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("검색 결과");
+        getSupportActionBar().setTitle(SEARCH_RESULT_TITLE);
 
-        String getRecipeName = getIntent().getStringExtra("recipeName");
-        Log.d("TAG", "받아온 레시피 명: " + getRecipeName);
-        Toast.makeText(ResultActivity.this, "받아온 레시피 명: " + getRecipeName, Toast.LENGTH_SHORT).show();
-    }
+        String getRecipeName = getIntent().getStringExtra(RECIPE_NAME);
+        setText(getRecipeFormat(getRecipeName), recipeNameTextView, R.id.result_recipe_name);
+        setTextByExtra(INGREDIENTS, ingredientsTextView, R.id.result_ingredients);
+        setTextByExtra(COOKING_ORDER, cookingOrderTextView, R.id.result_cookingorder);
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
