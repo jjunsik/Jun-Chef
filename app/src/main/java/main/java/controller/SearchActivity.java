@@ -6,7 +6,7 @@ import static main.java.model.constant.ResultConstant.RECIPE_NAME;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +22,7 @@ import main.java.R;
 import main.java.adapter.HistoryRecyclerViewAdapter;
 import main.java.model.SearchHistory;
 import main.java.model.SearchResult;
+import main.java.model.constant.ResultConstant;
 import main.java.repository.HistoryRepository;
 import main.java.repository.LocalHistoryRepository;
 import main.java.service.history.HistoryService;
@@ -112,12 +113,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        // 검색어 입력 상자 초기화
-        SearchView recipeSearch = findViewById(R.id.search_recipe);
-        recipeSearch.setQuery("", false);
-        recipeSearch.clearFocus();
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("TAG", "SearchActivity destroyed");
     }
 
 //    private void updateSearchResults() {

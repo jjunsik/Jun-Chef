@@ -74,4 +74,11 @@ public class ResultActivity extends AppCompatActivity {
     private static String getRecipeFormat(String getRecipeName) {
         return "\"" + getRecipeName + "\" 레시피";
     }
+
+    @Override
+    protected void onDestroy() {
+        callback.remove();
+        super.onDestroy();
+        Log.d("TAG", "ResultActivity destroyed");
+    }
 }
