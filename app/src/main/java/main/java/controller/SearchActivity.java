@@ -29,6 +29,7 @@ import main.java.service.history.HistoryService;
 import main.java.service.history.HistoryServiceImpl;
 import main.java.service.recipe.GptRecipeService;
 import main.java.service.recipe.RecipeService;
+import main.java.util.LoadingDialog;
 import main.java.util.http.HttpService;
 import main.java.util.parser.GptResponseParser;
 
@@ -47,6 +48,8 @@ public class SearchActivity extends AppCompatActivity {
 
         Toolbar searchActivityToolbar = findViewById(R.id.search_toolbar);
         setSupportActionBar(searchActivityToolbar);
+
+        final LoadingDialog loadingDialog = new LoadingDialog(SearchActivity.this);
 
         // 뒤로 가기 버튼 활성화
         Objects.requireNonNull(getSupportActionBar())
