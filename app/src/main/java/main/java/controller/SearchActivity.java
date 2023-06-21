@@ -6,7 +6,6 @@ import static main.java.model.constant.ResultConstant.RECIPE_NAME;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +21,6 @@ import main.java.R;
 import main.java.adapter.HistoryRecyclerViewAdapter;
 import main.java.model.SearchHistory;
 import main.java.model.SearchResult;
-import main.java.model.constant.ResultConstant;
 import main.java.repository.HistoryRepository;
 import main.java.repository.LocalHistoryRepository;
 import main.java.service.history.HistoryService;
@@ -113,12 +111,6 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
             }
         };
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("TAG", "SearchActivity destroyed");
     }
 
 //    private void updateSearchResults() {

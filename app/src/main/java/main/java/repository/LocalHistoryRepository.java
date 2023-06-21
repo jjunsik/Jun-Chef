@@ -3,7 +3,6 @@ package main.java.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -16,7 +15,6 @@ import main.java.service.history.HistoryServiceImpl;
 
 public class LocalHistoryRepository implements HistoryRepository {
     private final Context context;
-    private final static int MAX_COUNT = 5;
 
     public LocalHistoryRepository(Context context) {
         this.context = context;

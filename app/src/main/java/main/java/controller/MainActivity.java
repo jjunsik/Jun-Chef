@@ -6,15 +6,12 @@ import static main.java.controller.constant.ActivityConstant.BACK_TOAST_MESSAGE;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import main.java.R;
-import main.java.controller.constant.ActivityConstant;
 
 public class MainActivity extends AppCompatActivity {
     
@@ -48,11 +45,5 @@ public class MainActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false, BACK_TIME); // 1초 딜레이
 
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("TAG", "MainActivity destroyed");
     }
 }

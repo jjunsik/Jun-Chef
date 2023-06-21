@@ -1,7 +1,5 @@
 package main.java.service.recipe;
 
-import android.util.Log;
-
 import main.java.BackgroundThread;
 import main.java.model.SearchResult;
 import main.java.service.history.HistoryService;
@@ -19,8 +17,6 @@ public abstract class RecipeService {
         this.resultParser = resultParser;
         this.historyService = historyService;
     }
-
-    // private, public, protected
 
     public SearchResult search(String word) {
         String response;
@@ -40,10 +36,8 @@ public abstract class RecipeService {
 
             response = gptBack.getResponse();
 
-            Log.d("TAG", "search: 통신 성공!" + response);
         } catch (Exception e) {
             // 애러 로직
-            Log.d("TAG", "통신 실패!");
             e.printStackTrace();
             return null;
         }
@@ -56,9 +50,7 @@ public abstract class RecipeService {
             return null;
 
         searchResult.setRecipeName(word);
-        Log.d("TAG", "레시피명 입력 성공! \n" + searchResult.getRecipeName());
-        Log.d("TAG", "재료 입력 성공! \n" + searchResult.getIngredients());
-        Log.d("TAG", "만드는 방법 입력 성공! \n" + searchResult.getCookingOrder());
+
         // 검색 결과룰 history 에 추가
         addHistory(searchResult);
 

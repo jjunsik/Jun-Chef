@@ -6,7 +6,6 @@ import static main.java.model.constant.ResultConstant.RECIPE_NAME;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -19,7 +18,6 @@ import java.util.Objects;
 import main.java.R;
 
 public class ResultActivity extends AppCompatActivity {
-    public static final String SEARCH_RESULT_TITLE = "검색 결과";
     TextView recipeNameTextView, ingredientsTextView, cookingOrderTextView;
 
     OnBackPressedCallback callback;
@@ -67,7 +65,6 @@ public class ResultActivity extends AppCompatActivity {
     private void setText(String extraText, TextView textView, int textViewId) {
         textView = findViewById(textViewId);
         textView.setText(extraText);
-        Log.d("TAG", "RESULT: " + extraText);
     }
 
     @NonNull
@@ -79,6 +76,5 @@ public class ResultActivity extends AppCompatActivity {
     protected void onDestroy() {
         callback.remove();
         super.onDestroy();
-        Log.d("TAG", "ResultActivity destroyed");
     }
 }
