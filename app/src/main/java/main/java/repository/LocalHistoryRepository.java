@@ -1,6 +1,9 @@
 package main.java.repository;
 
 
+import static main.java.repository.constant.RepositoryConstant.MAX_COUNT;
+import static main.java.repository.constant.RepositoryConstant.SUBSTRING_START_INDEX;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -58,10 +61,7 @@ public class LocalHistoryRepository implements HistoryRepository {
 
         for(int i = 1; i < getSearchHistoryCount() + 1; i ++){
             check = historyRepository.getString(String.valueOf(i), "");
-            checkSplit = check.substring(40, check.indexOf("\"}")).replace(" ", "");
-            Log.d("TAG", "check: " + check);
-            Log.d("TAG", "checkSplit: " + checkSplit);
-            Log.d("TAG", "historyReplace: " + historyReplace);
+            checkSplit = check.substring(SUBSTRING_START_INDEX, check.indexOf("\"}")).replace(" ", "");
             if(checkSplit.equals(historyReplace)){
                 historyService.removeHistory(i);
                 break;
