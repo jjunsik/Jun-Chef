@@ -1,5 +1,6 @@
 package main.java.controller;
 
+import static main.java.controller.constant.ActivityConstant.SEARCH_RESULT_TITLE;
 import static main.java.model.constant.ResultConstant.COOKING_ORDER;
 import static main.java.model.constant.ResultConstant.INGREDIENTS;
 import static main.java.model.constant.ResultConstant.RECIPE_NAME;

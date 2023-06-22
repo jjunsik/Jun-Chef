@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import main.java.R;
 import main.java.adapter.HistoryRecyclerViewAdapter;
