@@ -80,19 +80,15 @@ public class SearchActivity extends AppCompatActivity {
                 // 검색 버튼을 클릭 시 호출
                 loadingDialog.startLoadingDialog();
 
-                SearchResult result = recipeService.search(query);
+                CompletableFuture<SearchResult> futureResult = recipeService.search(query);
 
-                if (result == null) {
-                    // error 처리
-                    // 없음!
-                    loadingDialog.dismissDialog();
-                    return true;
-                }
-
-                if (historyRepository.getSearchHistoryCount() != 0) {
-                    historyAdapter = new HistoryRecyclerViewAdapter(historyService.getSearchHistories(5), SearchActivity.this);
-                    historyRecyclerView.setAdapter(historyAdapter);
-                }
+                // thenAccept(): 네트워크 작업이 완료된 후에 결과를 전달받아 메인 스레드에서 해당 결과를 처리하는 작업을 수행
+                futureResult.thenAccept(result -> {
+                    if (result == null) {
+                        // error 처리
+                        // 없음!
+                        loadingDialog.dismissDialog();
+                    }
 
                     Intent goToResultActivity = new Intent(getApplicationContext(), ResultActivity.class);
 
