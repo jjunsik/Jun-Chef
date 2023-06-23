@@ -1,5 +1,9 @@
 package main.java.util.http;
 
+import static main.java.util.http.constant.RequestConstant.GET_METHOD_NAME;
+import static main.java.util.http.constant.RequestConstant.JSON_CONTENT_TYPE;
+import static main.java.util.http.constant.RequestConstant.POST_METHOD_NAME;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +15,6 @@ import java.net.URL;
 import main.java.util.http.request.CommonRequest;
 
 public class HttpService {
-
-    private static final String POST_METHOD_NAME = "POST";
-    private static final String GET_METHOD_NAME = "GET";
-    private static final String CONTENT_TYPE = "application/json";
 
     public String post(CommonRequest request) {
         String response = null;
@@ -34,7 +34,7 @@ public class HttpService {
 
             // header 정보 입력
             connection.setRequestMethod(POST_METHOD_NAME);
-            connection.setRequestProperty("Content-Type", CONTENT_TYPE);
+            connection.setRequestProperty("Content-Type", JSON_CONTENT_TYPE);
             connection.setRequestProperty("Authorization", "Bearer " + request.getKey());
 
             // body 입력
