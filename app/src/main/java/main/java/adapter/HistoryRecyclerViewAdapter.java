@@ -1,5 +1,10 @@
 package main.java.adapter;
 
+import static main.java.model.constant.ResultConstant.COOKING_ORDER;
+import static main.java.model.constant.ResultConstant.INGREDIENTS;
+import static main.java.model.constant.ResultConstant.RECIPE_NAME;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -14,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import main.java.R;
 import main.java.controller.ResultActivity;
@@ -26,6 +31,7 @@ import main.java.service.history.HistoryService;
 import main.java.service.history.HistoryServiceImpl;
 import main.java.service.recipe.GptRecipeService;
 import main.java.service.recipe.RecipeService;
+import main.java.util.LoadingDialog;
 import main.java.util.http.HttpService;
 import main.java.util.parser.GptResponseParser;
 
@@ -53,6 +59,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         RecipeService recipeService
                 = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
 
+        final LoadingDialog loadingDialog = new LoadingDialog((Activity) context);
+
         int itemIdx = holder.getAdapterPosition();
 
         HistoryItemViewHolder historyItemViewHolder = (HistoryItemViewHolder) holder;
@@ -63,18 +71,29 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         historyItemViewHolder.itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, (itemIdx + 1)+"번째 텍스트 뷰 클릭", Toast.LENGTH_SHORT).show();
-                SearchResult result = recipeService.search(historyItemList.get(itemIdx).getRecipeName());
+                loadingDialog.startLoadingDialog();
 
-                if (result == null) {
-                    // UI 예외 처리
-                }
+                String recipeName = historyItemList.get(itemIdx).getRecipeName();
+                CompletableFuture<SearchResult> futureResult = recipeService.search(recipeName);
 
-                Intent goToResultActivity = new Intent(context, ResultActivity.class);
-                goToResultActivity.putExtra("recipeName", Objects.requireNonNull(result).getRecipeName());
-                goToResultActivity.putExtra("ingredients", Objects.requireNonNull(result).getIngredients());
-                goToResultActivity.putExtra("cookingOrder", Objects.requireNonNull(result).getCookingOrder());
-                context.startActivity(goToResultActivity);
+                // 나중에 결과가 필요한 시점에서 get() 메서드를 호출하여 결과를 얻음
+                futureResult.thenAccept(result -> {
+                    if (result == null) {
+                        // error 처리
+                        // 없음!
+                        loadingDialog.dismissDialog();
+                    }
+
+                    Intent goToResultActivity = new Intent(context, ResultActivity.class);
+
+                    goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
+                    goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
+                    goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
+
+                    loadingDialog.dismissDialog();
+
+                    context.startActivity(goToResultActivity);
+                });
             }
         });
 
