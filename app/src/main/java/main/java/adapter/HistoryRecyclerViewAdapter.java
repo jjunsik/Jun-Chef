@@ -71,7 +71,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         historyItemViewHolder.itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingDialog.startLoadingDialog();
+                loadingDialog.show();
 
                 String recipeName = historyItemList.get(itemIdx).getRecipeName();
                 CompletableFuture<SearchResult> futureResult = recipeService.search(recipeName);
