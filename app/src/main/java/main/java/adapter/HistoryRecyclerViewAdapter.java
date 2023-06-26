@@ -81,7 +81,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     if (result == null) {
                         // error 처리
                         // 없음!
-                        loadingDialog.dismissDialog();
                     }
 
                     Intent goToResultActivity = new Intent(context, ResultActivity.class);
@@ -89,8 +88,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
                     goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
                     goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
-
-                    loadingDialog.dismissDialog();
 
                     context.startActivity(goToResultActivity);
                 });

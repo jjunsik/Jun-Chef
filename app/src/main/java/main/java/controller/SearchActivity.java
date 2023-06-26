@@ -53,9 +53,8 @@ public class SearchActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar())
                 .setDisplayHomeAsUpEnabled(true);
 
-        SearchView recipeSearch = findViewById(R.id.search_recipe);
-
         // SearchView 옆에 검색 버튼 활성화
+        SearchView recipeSearch = findViewById(R.id.search_recipe);
         recipeSearch.setSubmitButtonEnabled(true);
 
         RecyclerView historyRecyclerView = findViewById(R.id.history_items);
@@ -63,10 +62,12 @@ public class SearchActivity extends AppCompatActivity {
 
         if (historyAdapter != null)
             return;
+
         List<SearchHistory> searchHistories = historyService.getSearchHistories(5);
 
         if (searchHistories == null)
             return;
+
         historyAdapter = new HistoryRecyclerViewAdapter(searchHistories, SearchActivity.this);
         historyRecyclerView.setAdapter(historyAdapter);
 
@@ -84,10 +85,12 @@ public class SearchActivity extends AppCompatActivity {
 
                 // thenAccept(): 네트워크 작업이 완료된 후에 결과를 전달받아 메인 스레드에서 해당 결과를 처리하는 작업을 수행
                 futureResult.thenAccept(result -> {
+                    loadingDialog.dismiss();
+
                     if (result == null) {
                         // error 처리
                         // 없음!
-                        loadingDialog.dismissDialog();
+                        return;
                     }
 
                     Intent goToResultActivity = new Intent(getApplicationContext(), ResultActivity.class);
@@ -95,8 +98,6 @@ public class SearchActivity extends AppCompatActivity {
                     goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
                     goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
                     goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
-
-                    loadingDialog.dismissDialog();
 
                     startActivity(goToResultActivity);
                 });
