@@ -1,14 +1,14 @@
 package main.java.util;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 
 import main.java.R;
 
-public class LoadingDialog {
-    private Activity activity;
+public class LoadingDialog implements DialogInterface {
+    private final Activity activity;
     private AlertDialog dialog;
 
     public LoadingDialog(Activity myActivity) {
@@ -26,7 +26,13 @@ public class LoadingDialog {
         dialog.show();
     }
 
-    public void dismissDialog(){
+    @Override
+    public void dismiss(){
         dialog.dismiss();
+    }
+
+    @Override
+    public void cancel() {
+        dismiss();
     }
 }
