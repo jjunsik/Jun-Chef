@@ -76,8 +76,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 String recipeName = historyItemList.get(itemIdx).getRecipeName();
                 CompletableFuture<SearchResult> futureResult = recipeService.search(recipeName);
 
-                // 나중에 결과가 필요한 시점에서 get() 메서드를 호출하여 결과를 얻음
                 futureResult.thenAccept(result -> {
+                    loadingDialog.dismiss();
                     if (result == null) {
                         // error 처리
                         // 없음!
