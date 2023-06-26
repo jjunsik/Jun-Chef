@@ -15,7 +15,7 @@ public class LoadingDialog implements DialogInterface {
         activity = myActivity;
     }
 
-    public void startLoadingDialog(){
+    public void show(){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
