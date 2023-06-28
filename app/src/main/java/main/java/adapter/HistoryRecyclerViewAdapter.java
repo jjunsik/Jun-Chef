@@ -63,44 +63,38 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         int itemIdx = holder.getAdapterPosition();
 
+        String recipeName = historyItemList.get(itemIdx).getRecipeName();
+
         HistoryItemViewHolder historyItemViewHolder = (HistoryItemViewHolder) holder;
 
         historyItemViewHolder.name.setText(historyItemList.get(itemIdx).getRecipeName());
         historyItemViewHolder.createTime.setText(historyItemList.get(itemIdx).getCreateDateTime());
 
-        historyItemViewHolder.itemLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingDialog.show();
+        historyItemViewHolder.itemLayout.setOnClickListener(v -> {
+            loadingDialog.show();
+            CompletableFuture<SearchResult> futureResult = recipeService.search(recipeName);
 
-                String recipeName = historyItemList.get(itemIdx).getRecipeName();
-                CompletableFuture<SearchResult> futureResult = recipeService.search(recipeName);
+            futureResult.thenAccept(result -> {
+                loadingDialog.dismiss();
+                if (result == null) {
+                    // UI error 처리
+                    return;
+                }
 
-                futureResult.thenAccept(result -> {
-                    loadingDialog.dismiss();
-                    if (result == null) {
-                        // error 처리
-                        // 없음!
-                    }
+                Intent goToResultActivity = new Intent(context, ResultActivity.class);
 
-                    Intent goToResultActivity = new Intent(context, ResultActivity.class);
+                goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
+                goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
+                goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
 
-                    goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
-                    goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
-                    goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
-
-                    context.startActivity(goToResultActivity);
-                });
-            }
+                context.startActivity(goToResultActivity);
+            });
         });
 
-        historyItemViewHolder.removeHistoryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                historyService.removeHistory(itemIdx + 1);
-                deleteItem(itemIdx);
-                Toast.makeText(context, (itemIdx + 1)+"번째 텍스트 뷰 삭제", Toast.LENGTH_SHORT).show();
-            }
+        historyItemViewHolder.removeHistoryBtn.setOnClickListener(v -> {
+            historyService.removeHistory(itemIdx + 1);
+            deleteItem(itemIdx);
+            Toast.makeText(context, "\"" + recipeName + "\" 삭제", Toast.LENGTH_SHORT).show();
         });
     }
 
