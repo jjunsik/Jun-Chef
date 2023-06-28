@@ -9,12 +9,6 @@ import main.java.util.parser.dto.GptResponseDto;
 import main.java.util.parser.dto.GptResponseMessageDto;
 
 public class GptResponseParser implements ResultParser{
-
-    public static final String RECIPE_NAME_TITLE = "음식 이름";
-    public static final String INGREDIENT_RECIPE_REGEX = "\\[(재료|레시피)\\]";
-    public static final String START_INGREDIENT_TEXT = "[재료]";
-    public static final String START_COOKING_ORDER_TEXT = "[만드는 방법]";
-
     @Override
     public SearchResult getSearchResultByResponse(String response) {
         // TODO: 파싱!
