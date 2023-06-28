@@ -1,5 +1,10 @@
 package main.java.util.parser;
 
+import static main.java.util.parser.constant.ParserConstant.INGREDIENT_RECIPE_REGEX;
+import static main.java.util.parser.constant.ParserConstant.RECIPE_NAME_TITLE;
+import static main.java.util.parser.constant.ParserConstant.START_COOKING_ORDER_TEXT;
+import static main.java.util.parser.constant.ParserConstant.START_INGREDIENT_TEXT;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -53,7 +58,6 @@ public class GptResponseParser implements ResultParser{
             // JSON 파싱 오류 처리
             // 예외를 기록하거나 오류 메시지를 출력
             e.printStackTrace();
-
             return null;
         }
 
