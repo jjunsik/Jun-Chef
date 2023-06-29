@@ -4,6 +4,8 @@ import static main.java.util.http.constant.RequestConstant.GET_METHOD_NAME;
 import static main.java.util.http.constant.RequestConstant.JSON_CONTENT_TYPE;
 import static main.java.util.http.constant.RequestConstant.POST_METHOD_NAME;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import main.java.util.http.request.CommonRequest;
 
@@ -104,12 +107,18 @@ public class HttpService {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            closeBufferedReader(br); // closeBufferedReader() 메서드를 호출하여 BufferedReader를 안전하게 닫음
+        }
+        return stringBuilder.toString();
+    }
+
+    private void closeBufferedReader(BufferedReader br) {
+        if (br != null) {
             try {
                 br.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
-        return stringBuilder.toString();
     }
 }
