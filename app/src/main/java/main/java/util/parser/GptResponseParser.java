@@ -33,13 +33,11 @@ public class GptResponseParser implements ResultParser{
 
             // responseDto에서 첫 번째 choice를 가져옴
             GptResponseChoicesDto choiceDto = responseDto.getChoices().get(0);
-
             if (choiceDto == null)
                 return null;
 
             // choiceDto에서 message를 가져옴
             GptResponseMessageDto messageDto = choiceDto.getMessage();
-
             if (messageDto == null)
                 return null;
 
@@ -55,9 +53,14 @@ public class GptResponseParser implements ResultParser{
                 cookingOrder.append("\n").append(splitContent[2].replace("\n\n", "\n").trim());
             }
         } catch (JsonSyntaxException e) {
-            // JSON 파싱 오류 처리
             // 예외를 기록하거나 오류 메시지를 출력
             e.printStackTrace();
+            return null;
+        }
+
+        // 파싱 오류 처리
+        if (ingredients.toString().equals("[재료]") || ingredients.toString().equals("[재료]\n와") || cookingOrder.toString().equals("[만드는 방법]")){
+            //파싱 안됨.
             return null;
         }
 
