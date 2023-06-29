@@ -49,9 +49,18 @@ public class HttpService {
             response = getResponseByInputStream(connection.getInputStream());
 
         } catch (IOException e) {
+            Class<? extends Exception> exceptionClass = e.getClass();
+            String exceptionClassName = exceptionClass.getName();
+            Log.d("TAG", exceptionClassName);
+
+            // 네트워크 연결 문제에 대한 처리
+            if (e instanceof UnknownHostException){
+                return null;
+            }
+
+            // 네트워크 연결 오류를 제외한 API 통신 오류
             e.printStackTrace();
         }
-
         return response;
     }
 
