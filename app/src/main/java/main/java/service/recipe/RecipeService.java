@@ -39,17 +39,19 @@ public abstract class RecipeService {
 
             try {
                 response = new HttpService().post(new ChatGptRequest(message));
-
             } catch (Exception e) {
-                // 애러 로직
                 e.printStackTrace();
+                return null;
+            }
+
+            // API 통신 오류 (네트워크 연결X)
+            if (response == null){
                 return null;
             }
 
             // response 를 파싱하여 searchResult 에 저장
             SearchResult searchResult = resultParser.getSearchResultByResponse(response);
 
-            // 검색 결과가 파싱이 불가능한 형태일 경우
             if (searchResult == null)
                 return null;
 
