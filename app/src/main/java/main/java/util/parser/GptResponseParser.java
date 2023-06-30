@@ -59,7 +59,7 @@ public class GptResponseParser implements ResultParser{
         }
 
         // 파싱 오류 처리
-        if (ingredients.toString().equals("[재료]") || ingredients.toString().equals("[재료]\n와") || cookingOrder.toString().equals("[만드는 방법]")){
+        if (ingredients.toString().equals("[재료]") || cookingOrder.toString().equals("[만드는 방법]")){
             //파싱 안됨.
             return null;
         }
