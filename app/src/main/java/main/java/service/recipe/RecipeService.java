@@ -36,13 +36,7 @@ public abstract class RecipeService {
             Gson gson = new Gson();
             message.add(gson.toJson(requestMessage));
 
-
-            try {
-                response = new HttpService().post(new ChatGptRequest(message));
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+            response = new HttpService().post(new ChatGptRequest(message));
 
             // API 통신 오류 (네트워크 연결X)
             if (response == null){
