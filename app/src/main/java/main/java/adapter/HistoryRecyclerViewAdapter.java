@@ -86,7 +86,19 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
                 goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
 
-                context.startActivity(goToResultActivity);
+                activity.startActivity(goToResultActivity);
+            }).exceptionally(ex -> {
+                loadingDialog.dismiss();
+                String message = Objects.requireNonNull(ex.getMessage());
+                ErrorFormat result = getErrorFromMessage(message);
+
+                // A 클래스에서 발생한 예외 처리
+                activity.runOnUiThread(() -> {
+                    ErrorDialog errorDialog = new ErrorDialog(activity, result);
+                    errorDialog.show();
+                });
+
+                return null;
             });
         });
 

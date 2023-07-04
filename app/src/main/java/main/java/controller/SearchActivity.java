@@ -3,6 +3,7 @@ package main.java.controller;
 import static main.java.model.constant.ResultConstant.COOKING_ORDER;
 import static main.java.model.constant.ResultConstant.INGREDIENTS;
 import static main.java.model.constant.ResultConstant.RECIPE_NAME;
+import static main.java.util.error.constant.ErrorConstant.getErrorFromMessage;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import main.java.service.history.HistoryServiceImpl;
 import main.java.service.recipe.GptRecipeService;
 import main.java.service.recipe.RecipeService;
 import main.java.util.LoadingDialog;
+import main.java.util.error.ErrorFormat;
+import main.java.util.error.dialog.ErrorDialog;
 import main.java.util.http.HttpService;
 import main.java.util.parser.GptResponseParser;
 
@@ -39,6 +42,7 @@ public class SearchActivity extends AppCompatActivity {
 
     RecipeService recipeService
             = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +62,7 @@ public class SearchActivity extends AppCompatActivity {
         recipeSearch.setSubmitButtonEnabled(true);
 
         RecyclerView historyRecyclerView = findViewById(R.id.history_items);
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
 
         if (historyAdapter != null)
             return;
@@ -87,12 +91,6 @@ public class SearchActivity extends AppCompatActivity {
                 futureResult.thenAccept(result -> {
                     loadingDialog.dismiss();
 
-                    if (result == null) {
-                        // error 처리
-                        // 없음!
-                        return;
-                    }
-
                     Intent goToResultActivity = new Intent(getApplicationContext(), ResultActivity.class);
 
                     goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
@@ -100,8 +98,20 @@ public class SearchActivity extends AppCompatActivity {
                     goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
 
                     startActivity(goToResultActivity);
-                });
+                }).exceptionally(ex -> {
+                    loadingDialog.dismiss();
 
+                    String message = Objects.requireNonNull(ex.getMessage());
+                    ErrorFormat result = getErrorFromMessage(message);
+
+                    // A 클래스에서 발생한 예외 처리
+                    runOnUiThread(() -> {
+                        ErrorDialog errorDialog = new ErrorDialog(SearchActivity.this, result);
+                        errorDialog.show();
+                    });
+
+                    return null;
+                });
                 return true;
             }
 
