@@ -13,13 +13,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import main.java.util.http.request.CommonRequest;
 
 public class HttpService {
-
-    public String post(CommonRequest request) {
+    public String post(CommonRequest request) throws IOException {
         String response = null;
 
         try {
@@ -52,14 +50,8 @@ public class HttpService {
             response = getResponseByInputStream(connection.getInputStream());
 
         } catch (IOException e) {
-            Class<? extends Exception> exceptionClass = e.getClass();
-            String exceptionClassName = exceptionClass.getName();
-            Log.d("TAG", exceptionClassName);
-
-            // 네트워크 연결 문제에 대한 처리
-            if (e instanceof UnknownHostException){
-                return null;
-            }
+            throw e;
+        }
 
             // 네트워크 연결 오류를 제외한 API 통신 오류
             e.printStackTrace();
