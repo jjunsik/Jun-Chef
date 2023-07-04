@@ -44,7 +44,7 @@ public class HttpService {
 
             // response code 가 200 인지를 확인
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
-                return null;
+                Log.d("TAG", "response code 오류\n" + connection.getResponseCode());
 
             // response
             response = getResponseByInputStream(connection.getInputStream());
