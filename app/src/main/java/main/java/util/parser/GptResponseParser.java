@@ -55,11 +55,12 @@ public class GptResponseParser implements ResultParser{
         } catch (JsonSyntaxException e) {
             // 예외를 기록하거나 오류 메시지를 출력
             e.printStackTrace();
-            return null;
+            throw e;
         }
 
         // 파싱 오류 처리
-        if (ingredients.toString().equals("[재료]") || cookingOrder.toString().equals("[만드는 방법]")){
+        if ((ingredients.toString().equals(START_INGREDIENT_TEXT) || cookingOrder.toString().equals(START_COOKING_ORDER_TEXT)
+            || ingredients.toString().length() < 8 || cookingOrder.toString().length() < 16)){
             //파싱 안됨.
             return null;
         }
