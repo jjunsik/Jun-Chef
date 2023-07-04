@@ -53,9 +53,6 @@ public class HttpService {
             throw e;
         }
 
-            // 네트워크 연결 오류를 제외한 API 통신 오류
-            e.printStackTrace();
-        }
         return response;
     }
 
