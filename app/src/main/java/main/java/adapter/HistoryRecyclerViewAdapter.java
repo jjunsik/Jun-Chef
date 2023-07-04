@@ -3,9 +3,9 @@ package main.java.adapter;
 import static main.java.model.constant.ResultConstant.COOKING_ORDER;
 import static main.java.model.constant.ResultConstant.INGREDIENTS;
 import static main.java.model.constant.ResultConstant.RECIPE_NAME;
+import static main.java.util.error.constant.ErrorConstant.getErrorFromMessage;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import main.java.R;
@@ -32,17 +33,19 @@ import main.java.service.history.HistoryServiceImpl;
 import main.java.service.recipe.GptRecipeService;
 import main.java.service.recipe.RecipeService;
 import main.java.util.LoadingDialog;
+import main.java.util.error.ErrorFormat;
+import main.java.util.error.dialog.ErrorDialog;
 import main.java.util.http.HttpService;
 import main.java.util.parser.GptResponseParser;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<SearchHistory> historyItemList;
-    Context context;
+    Activity activity;
 
-    public HistoryRecyclerViewAdapter(List<SearchHistory> historyItemList, Context context) {
+    public HistoryRecyclerViewAdapter(List<SearchHistory> historyItemList, Activity activity) {
         this.historyItemList = historyItemList;
-        this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -54,12 +57,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        HistoryRepository historyRepository = new LocalHistoryRepository(context);
+        HistoryRepository historyRepository = new LocalHistoryRepository(activity);
         HistoryService historyService = new HistoryServiceImpl(historyRepository);
         RecipeService recipeService
                 = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
 
-        final LoadingDialog loadingDialog = new LoadingDialog((Activity) context);
+        final LoadingDialog loadingDialog = new LoadingDialog(activity);
 
         int itemIdx = holder.getAdapterPosition();
 
@@ -76,12 +79,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             futureResult.thenAccept(result -> {
                 loadingDialog.dismiss();
-                if (result == null) {
-                    // UI error 처리
-                    return;
-                }
 
-                Intent goToResultActivity = new Intent(context, ResultActivity.class);
+                Intent goToResultActivity = new Intent(activity, ResultActivity.class);
 
                 goToResultActivity.putExtra(RECIPE_NAME, result.getRecipeName());
                 goToResultActivity.putExtra(INGREDIENTS, result.getIngredients());
@@ -94,7 +93,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         historyItemViewHolder.removeHistoryBtn.setOnClickListener(v -> {
             historyService.removeHistory(itemIdx + 1);
             deleteItem(itemIdx);
-            Toast.makeText(context, "\"" + recipeName + "\" 삭제", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "\"" + recipeName + "\" 삭제", Toast.LENGTH_SHORT).show();
         });
     }
 
