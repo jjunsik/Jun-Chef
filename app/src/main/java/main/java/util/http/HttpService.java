@@ -1,8 +1,10 @@
 package main.java.util.http;
 
+import static main.java.util.http.constant.RequestConstant.CONNECTION_TIME_OUT_VALUE;
 import static main.java.util.http.constant.RequestConstant.GET_METHOD_NAME;
 import static main.java.util.http.constant.RequestConstant.JSON_CONTENT_TYPE;
 import static main.java.util.http.constant.RequestConstant.POST_METHOD_NAME;
+import static main.java.util.http.constant.RequestConstant.READ_TIME_OUT_VALUE;
 
 import android.util.Log;
 
@@ -18,12 +20,14 @@ import main.java.util.http.request.CommonRequest;
 
 public class HttpService {
     public String post(CommonRequest request) throws IOException {
-        String response = null;
+        String response;
 
         try {
             // url 입력
             URL myUrl = new URL(request.getUrl());
             HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+            connection.setConnectTimeout(CONNECTION_TIME_OUT_VALUE);
+            connection.setReadTimeout(READ_TIME_OUT_VALUE);
 
             // output stream 에 값을 입력 하기 위해 설정 변경
             connection.setDoOutput(true);
@@ -41,10 +45,6 @@ public class HttpService {
             // body 입력
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(getRequestBodyBytes(request.toPostRequestString()));
-
-            // response code 가 200 인지를 확인
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
-                Log.d("TAG", "response code 오류\n" + connection.getResponseCode());
 
             // response
             response = getResponseByInputStream(connection.getInputStream());
