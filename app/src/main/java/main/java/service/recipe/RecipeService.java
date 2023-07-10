@@ -47,9 +47,9 @@ public abstract class RecipeService {
 
             int retryCount = 0;
 
-            if(searchResult == null) {
-                while (retryCount < 3) {
-                    try {
+            while (retryCount < NUMBER_OF_SEARCHES) {
+                if (!word.matches("[가-힣 ]*"))
+                    throw new RuntimeException(getSearchWordErrorMessage(), new SearchErrorException());
 
                         response = new HttpService().post(new ChatGptRequest(message));
 

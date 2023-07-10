@@ -9,18 +9,22 @@ public class ErrorConstant {
 
     public static final String NETWORK_ERROR_TITLE = "네트워크 연결 오류";
     public static final String NETWORK_ERROR_MESSAGE = "\n인터넷 연결 상태를 확인해 주세요.";
-    public static final String SEARCH_ERROR_TITLE = "검색 오류";
-    public static final String SEARCH_ERROR_MESSAGE = "\n검색어를 다시 입력해 주세요.";
+    public static final String SEARCH_WORD_ERROR_TITLE = "검색어 오류";
+    public static final String SEARCH_WORD_ERROR_MESSAGE = "\n검색어를 다시 입력해 주세요.";
+    public static final String SEARCH_ERROR_TITLE = "레시피 오류";
+    public static final String SEARCH_ERROR_MESSAGE = "\n레시피가 없는 음식입니다.\n검색어 확인 후, 다시 검색해 주세요.";
     public static final String API_ERROR_TITLE = "오류";
     public static final String API_ERROR_MESSAGE = "\n잠시 후 다시 시도해 주세요.";
+    public static final int NUMBER_OF_SEARCHES = 2;
 
     private static final Map<String, String> messageToTitle = new HashMap<>();
     private static final String SEPARATOR = "---";
 
     static {
         messageToTitle.put(NETWORK_ERROR_MESSAGE, NETWORK_ERROR_TITLE);
-        messageToTitle.put(SEARCH_ERROR_MESSAGE, SEARCH_ERROR_TITLE);
+        messageToTitle.put(SEARCH_WORD_ERROR_MESSAGE, SEARCH_WORD_ERROR_TITLE);
         messageToTitle.put(API_ERROR_MESSAGE, API_ERROR_TITLE);
+        messageToTitle.put(SEARCH_ERROR_MESSAGE, SEARCH_ERROR_TITLE);
     }
 
     public static String getErrorTitle(String message) {
@@ -45,5 +49,8 @@ public class ErrorConstant {
 
     public static String getAPIErrorMessage() {
         return "---" + API_ERROR_MESSAGE;
+    }
+    public static String getSearchWordErrorMessage() {
+        return "---" + SEARCH_WORD_ERROR_MESSAGE;
     }
 }
