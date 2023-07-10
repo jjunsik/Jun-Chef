@@ -4,6 +4,9 @@ import static main.java.util.parser.constant.ParserConstant.INGREDIENT_RECIPE_RE
 import static main.java.util.parser.constant.ParserConstant.RECIPE_NAME_TITLE;
 import static main.java.util.parser.constant.ParserConstant.START_COOKING_ORDER_TEXT;
 import static main.java.util.parser.constant.ParserConstant.START_INGREDIENT_TEXT;
+import static main.java.util.parser.constant.ParserConstant.parserErrorCondition;
+
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -47,22 +50,29 @@ public class GptResponseParser implements ResultParser{
             // 정규식을 사용하여 [재료]와 [레시피]로 문자열을 분할
             String[] splitContent = msgContent.split(INGREDIENT_RECIPE_REGEX);
 
-            // 분할된 문자열의 길이가 3인 경우(0번째 -> \n, 1번째 -> [재료], 2번째 -> [레시피]), [재료]와 [레시피]의 값을 추출
-            if (splitContent.length == 3) {
-                ingredients.append("\n").append(splitContent[1].replace("\n\n", "\n").trim());
-                cookingOrder.append("\n").append(splitContent[2].replace("\n\n", "\n").trim());
+            // 파싱 오류 처리
+            // 분할된 문자열의 길이가 3인 경우 (0번째 -> 재료 나오기 전 말이나 \n, 1번째 -> [재료], 2번째 -> [레시피]) [재료]와 [레시피]의 값을 추출
+            if(splitContent.length != 3) {
+                Log.d("TAG", "파싱 오류 조건인 \"분할된 문자열 길이가 3이 아님\"을 만족해서 오류뜸.");
+                return null;
+            }
+
+            ingredients.append("\n").append(splitContent[1].replace("\n\n", "\n").trim());
+            cookingOrder.append("\n").append(splitContent[2].replace("\n\n", "\n").trim());
+            Log.d("TAG", "분할 했을 때 길이가 일단 3이어서 재료와 레시피에 텍스트 넣어줌.");
+
+            // 재료와 레시피에 담길 텍스트의 길이가 매우 짧은 경우
+            if (parserErrorCondition(ingredients, cookingOrder)) {
+                //파싱 안됨.
+                Log.d("TAG", "파싱 오류 조건인 \"텍스트 길이 짧음\"을 만족해서 오류뜸.");
+                return null;
             }
         } catch (JsonSyntaxException e) {
-            // 예외를 기록하거나 오류 메시지를 출력
+            // JSON을 GptResponseDto로 변환 불가할 때 예외
+            // 파싱 불가(검색 불가)가 아님.
+            Log.d("TAG", "왜 객체 변환 불가?\n" + response);
             e.printStackTrace();
             throw e;
-        }
-
-        // 파싱 오류 처리
-        if ((ingredients.toString().equals(START_INGREDIENT_TEXT) || cookingOrder.toString().equals(START_COOKING_ORDER_TEXT)
-            || ingredients.toString().length() < 8 || cookingOrder.toString().length() < 16)){
-            //파싱 안됨.
-            return null;
         }
 
         return new SearchResult(RECIPE_NAME_TITLE, ingredients.toString(), cookingOrder.toString());
