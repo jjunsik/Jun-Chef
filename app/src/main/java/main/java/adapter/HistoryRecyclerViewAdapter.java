@@ -92,7 +92,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 String message = Objects.requireNonNull(ex.getMessage());
                 ErrorFormat result = getErrorFromMessage(message);
 
-                // A 클래스에서 발생한 예외 처리
                 activity.runOnUiThread(() -> {
                     ErrorDialog errorDialog = new ErrorDialog(activity, result);
                     errorDialog.show();
@@ -129,13 +128,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    // 아이템 삭제 이벤트 처리 메서드
     public void deleteItem(int position) {
-        // 아이템 삭제 후 데이터 업데이트
         historyItemList.remove(position);
-        // 리사이클러뷰에 아이템 삭제를 알림
         notifyItemRemoved(position);
-        // 삭제된 아이템 이후에 있는 아이템들의 뷰 업데이트
         notifyItemRangeChanged(position, historyItemList.size() - position);
     }
 }

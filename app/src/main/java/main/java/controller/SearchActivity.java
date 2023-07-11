@@ -53,11 +53,9 @@ public class SearchActivity extends AppCompatActivity {
 
         final LoadingDialog loadingDialog = new LoadingDialog(SearchActivity.this);
 
-        // 뒤로 가기 버튼 활성화
         Objects.requireNonNull(getSupportActionBar())
                 .setDisplayHomeAsUpEnabled(true);
 
-        // SearchView 옆에 검색 버튼 활성화
         SearchView recipeSearch = findViewById(R.id.search_recipe);
         recipeSearch.setSubmitButtonEnabled(true);
 
@@ -82,12 +80,10 @@ public class SearchActivity extends AppCompatActivity {
         return new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // 검색 버튼을 클릭 시 호출
                 loadingDialog.show();
 
                 CompletableFuture<SearchResult> futureResult = recipeService.search(query);
 
-                // thenAccept(): 네트워크 작업이 완료된 후에 결과를 전달받아 메인 스레드에서 해당 결과를 처리하는 작업을 수행
                 futureResult.thenAccept(result -> {
                     loadingDialog.dismiss();
 
@@ -104,7 +100,6 @@ public class SearchActivity extends AppCompatActivity {
                     String message = Objects.requireNonNull(ex.getMessage());
                     ErrorFormat result = getErrorFromMessage(message);
 
-                    // A 클래스에서 발생한 예외 처리
                     runOnUiThread(() -> {
                         ErrorDialog errorDialog = new ErrorDialog(SearchActivity.this, result);
                         errorDialog.show();
@@ -112,12 +107,12 @@ public class SearchActivity extends AppCompatActivity {
 
                     return null;
                 });
+
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // 입력한 텍스트가 변경될 때마다 호출
                 return true;
             }
         };

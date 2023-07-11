@@ -27,7 +27,6 @@ public class SearchResult {
         this.recipeName = recipeName;
     }
 
-    // TODO: ADD HISTORY 개발
     public SearchHistory toSearchHistory() {
         return new SearchHistory(getRecipeName());
     }
