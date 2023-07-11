@@ -26,8 +26,7 @@ public class ErrorDialog implements DialogInterface{
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(CHECK_BUTTON_TEXT, (dialog, which) -> {
-            // 확인 버튼을 클릭했을 때 수행할 동작
-            dialog.dismiss(); // 다이얼로그 닫기
+            dialog.dismiss();
         });
         alertDialog = builder.create();
         alertDialog.show();
