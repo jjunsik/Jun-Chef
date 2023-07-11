@@ -57,15 +57,36 @@ public abstract class RecipeService {
 
                 response = getResponseByMessage(message);
 
-                        searchResult = resultParser.getSearchResultByResponse(response);
+                searchResult = resultParser.getSearchResultByResponse(response);
 
-                        // 검색이 성공한 경우 결과를 반환
-                        if (searchResult != null) {
-                            searchResult.setRecipeName(word);
-                            addHistory(searchResult);
-                            return searchResult;
-                        }
-                        retryCount++;
+                // 검색이 성공한 경우 결과를 반환
+                if (searchResult == null) {
+                    Log.d("TAG", "재검색 해서 실패");
+                    retryCount++;
+
+                    // 이 코드가 실행되는 스레드에 대한 제어
+                    sleep(1000);
+                    continue;
+                }
+
+                searchResult.setRecipeName(word);
+                addHistory(searchResult);
+
+                Log.d("TAG", "검색 성공");
+                return searchResult;
+
+            }
+
+            // 검색 재시도 후에도 실패한 경우 예외를 던짐
+            Log.d("TAG", "몇 번의 시도 끝에 검색 오류 전달");
+            throw new RuntimeException(getSearchErrorMessage(), new SearchErrorException());
+        });
+    }
+
+    private static String getResponseByMessage(List<String> message) {
+        String response;
+        try {
+            response = new HttpService().post(new ChatGptRequest(message));
 
             // 네트워크 연결 및 API 통신 예외 처리
         } catch (IOException e) {
@@ -87,9 +108,12 @@ public abstract class RecipeService {
         return response;
     }
 
-            // 검색이 3번 재시도 후에도 실패한 경우 예외를 던짐
-            throw new RuntimeException(getSearchErrorMessage(), new SearchErrorException());
-        });
+    private static void sleep (int mills) {
+        try {
+            Thread.sleep(mills);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected abstract void addHistory(SearchResult searchResult);
