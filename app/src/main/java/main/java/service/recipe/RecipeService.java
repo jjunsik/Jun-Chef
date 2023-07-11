@@ -1,8 +1,12 @@
 package main.java.service.recipe;
 
+import static main.java.util.error.constant.ErrorConstant.NUMBER_OF_SEARCHES;
 import static main.java.util.error.constant.ErrorConstant.getAPIErrorMessage;
 import static main.java.util.error.constant.ErrorConstant.getNetworkErrorMessage;
 import static main.java.util.error.constant.ErrorConstant.getSearchErrorMessage;
+import static main.java.util.error.constant.ErrorConstant.getSearchWordErrorMessage;
+
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -51,7 +55,7 @@ public abstract class RecipeService {
                 if (!word.matches("[가-힣 ]*"))
                     throw new RuntimeException(getSearchWordErrorMessage(), new SearchErrorException());
 
-                        response = new HttpService().post(new ChatGptRequest(message));
+                response = getResponseByMessage(message);
 
                         searchResult = resultParser.getSearchResultByResponse(response);
 
@@ -63,24 +67,25 @@ public abstract class RecipeService {
                         }
                         retryCount++;
 
-                        // 네트워크 연결 및 API 통신 예외 처리
-                    } catch (IOException e) {
-                        if (e instanceof UnknownHostException) {
-                            throw new RuntimeException(getNetworkErrorMessage(), e);
-                        }
-
-                        // 네트워크 연결 에러가 아닌 다른 네트워크 문제일 때
-                        throw new RuntimeException(getAPIErrorMessage(), e);
-
-                        // response 데이터를 자바 객체(GptResponseDto)로 변환 불가일 때
-                        // 파싱 불가(검색 불가)가 아님.
-                    } catch (JsonSyntaxException j) {
-                        throw new RuntimeException(getAPIErrorMessage(), j);
-                    } catch (SearchErrorException s) {
-                        throw new RuntimeException(getSearchErrorMessage(), s);
-                    }
-                }
+            // 네트워크 연결 및 API 통신 예외 처리
+        } catch (IOException e) {
+            if (e instanceof UnknownHostException) {
+                Log.d("TAG", "네트워크 연결 오류임.");
+                throw new RuntimeException(getNetworkErrorMessage(), e);
             }
+
+            // 네트워크 연결 에러가 아닌 다른 네트워크 문제일 때
+            Log.d("TAG", "네트워크 연결이 아닌 네트워크 통신 오류임.");
+            throw new RuntimeException(getAPIErrorMessage(), e);
+
+            // response 데이터를 자바 객체(GptResponseDto)로 변환 불가일 때
+            // 파싱 불가(검색 불가)가 아님.
+        } catch (JsonSyntaxException j) {
+            Log.d("TAG", "객체 변환 불가 오류임.\n");
+            throw new RuntimeException(getAPIErrorMessage(), j);
+        }
+        return response;
+    }
 
             // 검색이 3번 재시도 후에도 실패한 경우 예외를 던짐
             throw new RuntimeException(getSearchErrorMessage(), new SearchErrorException());
