@@ -30,7 +30,6 @@ public class LocalHistoryRepository implements HistoryRepository {
 
     @Override
     public List<SearchHistory> getSearchHistoriesByLimit(int limit) {
-        // key: idx (count 기준), string to class
         List<SearchHistory> histories = new LinkedList<>();
 
         SharedPreferences historyRepository = context.getSharedPreferences("history", Context.MODE_PRIVATE);
@@ -38,7 +37,7 @@ public class LocalHistoryRepository implements HistoryRepository {
 
         for (int i = 1; i <= limit; i++) {
             String json = historyRepository.getString(String.valueOf(i), "없음");
-            SearchHistory searchHistoryObject = gson.fromJson(json, SearchHistory.class); // JSON 을 SearchHistory 객체로 변환
+            SearchHistory searchHistoryObject = gson.fromJson(json, SearchHistory.class);
             histories.add(searchHistoryObject);
         }
         return histories;
@@ -52,9 +51,8 @@ public class LocalHistoryRepository implements HistoryRepository {
         SharedPreferences.Editor historyEditor = historyRepository.edit();
 
         Gson gson = new Gson();
-        String historyObject = gson.toJson(history); // SearchHistory 객체를 JSON 형태로 변환
+        String historyObject = gson.toJson(history);
 
-        // 중복 확인
         String check;
         String checkSplit;
         String historyReplace =history.getRecipeName().replace(" ", "");
@@ -82,7 +80,7 @@ public class LocalHistoryRepository implements HistoryRepository {
             }
         }
 
-        historyEditor.putString("1", historyObject).apply(); // JSON 을 SharedPreferences 에 저장
+        historyEditor.putString("1", historyObject).apply();
     }
 
     @Override
