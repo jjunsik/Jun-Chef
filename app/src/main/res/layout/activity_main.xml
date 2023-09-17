@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FAF7ED"
-    tools:context=".controller.MainActivity"
-    >
+    android:background="#FAF7ED">
 
-    <ImageView
-        android:layout_width="116dp"
-        android:layout_height="83dp"
-        android:layout_gravity="center"
+    <EditText
+        android:id="@+id/member_email"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="150dp"
+        android:ems="10"
+        android:hint="이메일을 입력해주세요"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/member_pwd"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
         android:layout_marginTop="50dp"
-        android:src="@drawable/ic_main" />
+        android:ems="10"
+        android:hint="비밀번호를 입력해주세요"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/member_email" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="레시피 검색"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:textSize="20sp"
-        android:textColor="#9171CC"
-        android:textStyle="bold"
-        />
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:text="로그인"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_register"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:text="회원 가입"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_login" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/startSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_gravity="bottom"
-            android:background="#9171CC"
-            android:text="시작하기"
-            android:textColor="#FFFFFF"/>
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
