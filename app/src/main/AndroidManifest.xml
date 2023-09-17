@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- enableOnBackInvokedCallback: 사용자가 디바이스의 뒤로 가기 버튼을 눌렀을 때 호출되는 콜백.
+    이 설정을 하지 않으면 OnBackPressedCallback() 메서드를 사용하여 뒤로 가기에 대한 이벤트 처리를 했다고 하더라도
+     onBackPressed() 메서드가 호출되어 뒤로 가기 이벤트를 처리한다. -->
     <application
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
