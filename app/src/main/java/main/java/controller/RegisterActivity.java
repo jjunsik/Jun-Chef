@@ -1,11 +1,17 @@
 package main.java.controller;
 
+import static main.java.controller.constant.ActivityConstant.REGISTER_TITLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import java.util.Objects;
 
 import main.java.R;
 
@@ -20,6 +26,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerEmail = findViewById(R.id.register_email);
         registerPasswd = findViewById(R.id.register_pwd);
+        Toolbar registerActivityToolbar = findViewById(R.id.register_toolbar);
+
+        setSupportActionBar(registerActivityToolbar);
+
+        // 뒤로 가기 버튼 활성화
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(REGISTER_TITLE);
+
         signUp = findViewById(R.id.btn_signup);
 
         signUp.setOnClickListener(v -> {
@@ -31,9 +45,20 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             // 정상적으로 가입이 됐다면 검색 화면으로 이동
-            Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
-            startActivity(intent);
+            Intent goToSearchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+            startActivity(goToSearchActivity);
             finish();
         });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent goToMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(goToMainActivity);
+                finish();
+            }
+        };
+
+        getOnBackPressedDispatcher().addCallback(RegisterActivity.this, callback);
     }
 }
