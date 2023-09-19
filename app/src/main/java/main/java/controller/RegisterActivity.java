@@ -30,7 +30,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         setSupportActionBar(registerActivityToolbar);
 
-        // 뒤로 가기 버튼 활성화
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(REGISTER_TITLE);
 
@@ -45,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             // 정상적으로 가입이 됐다면 검색 화면으로 이동
-            Intent goToSearchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+            Intent goToSearchActivity = new Intent(RegisterActivity.this, SearchActivity.class);
             startActivity(goToSearchActivity);
             finish();
         });
@@ -53,7 +52,8 @@ public class RegisterActivity extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Intent goToMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                Intent goToMainActivity = new Intent(RegisterActivity.this, MainActivity.class);
+                goToMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(goToMainActivity);
                 finish();
             }
