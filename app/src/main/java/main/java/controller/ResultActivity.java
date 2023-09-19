@@ -28,8 +28,8 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        Toolbar searchActivityToolbar = findViewById(R.id.result_toolbar);
-        setSupportActionBar(searchActivityToolbar);
+        Toolbar resultActivityToolbar = findViewById(R.id.result_toolbar);
+        setSupportActionBar(resultActivityToolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(SEARCH_RESULT_TITLE);
