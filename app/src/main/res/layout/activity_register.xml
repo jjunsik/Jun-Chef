@@ -21,12 +21,13 @@
         android:layout_marginTop="150dp"
         android:ems="10"
         android:hint="이메일를 입력해주세요"
-        android:inputType="textPassword"
+        android:textColorHint="#97673AB7"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextFields" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/register_pwd"
@@ -35,8 +36,11 @@
         android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="비밀번호를 입력해주세요"
-        android:inputType="textEmailAddress"
+        android:textColorHint="#97673AB7"
+        android:inputType="textPassword"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_email" />
 
@@ -46,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
         android:text="가입 완료"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
