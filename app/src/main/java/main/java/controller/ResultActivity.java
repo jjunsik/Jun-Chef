@@ -20,6 +20,7 @@ import main.java.R;
 
 public class ResultActivity extends AppCompatActivity {
     TextView recipeNameTextView, ingredientsTextView, cookingOrderTextView;
+
     OnBackPressedCallback callback;
 
     @Override
@@ -64,11 +65,5 @@ public class ResultActivity extends AppCompatActivity {
     @NonNull
     private static String getRecipeFormat(String getRecipeName) {
         return "\"" + getRecipeName + "\" 레시피";
-    }
-
-    @Override
-    protected void onDestroy() {
-        callback.remove();
-        super.onDestroy();
     }
 }
