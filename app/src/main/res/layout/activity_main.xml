@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#FAF7ED">
+<!--    tools:context=".controller.MainActivity">-->
 
     <EditText
         android:id="@+id/member_email"
@@ -12,7 +14,9 @@
         android:layout_marginTop="150dp"
         android:ems="10"
         android:hint="이메일을 입력해주세요"
+        android:textColorHint="#97673AB7"
         android:inputType="textEmailAddress"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +28,9 @@
         android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="비밀번호를 입력해주세요"
+        android:textColorHint="#97673AB7"
         android:inputType="textPassword"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +41,7 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:text="로그인"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_register"
         app:layout_constraintStart_toStartOf="parent" />
@@ -44,6 +51,7 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:text="회원 가입"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_login" />
