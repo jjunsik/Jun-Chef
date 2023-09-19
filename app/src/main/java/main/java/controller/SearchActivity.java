@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 import main.java.R;
 import main.java.adapter.HistoryRecyclerViewAdapter;
+import main.java.controller.backpressed.MyOnBackPressedCallback;
 import main.java.model.SearchHistory;
 import main.java.model.SearchResult;
 import main.java.repository.HistoryRepository;
@@ -66,6 +67,14 @@ public class SearchActivity extends AppCompatActivity {
             return;
 
         List<SearchHistory> searchHistories = historyService.getSearchHistories(5);
+
+        // 로그 아웃 버튼 만들고 클릭 시 MainActivity로 이동하도록 코드 추가 ******************************************
+
+        // 뒤로 가기 버튼을 2번 눌러야 앱이 종료되는 로직
+        MyOnBackPressedCallback searchActivityCallback = new MyOnBackPressedCallback(true, SearchActivity.this);
+
+        // OnBackPressedCallback 객체를 현재 액티비티의 OnBackPressedDispatcher에 등록
+        getOnBackPressedDispatcher().addCallback(SearchActivity.this, searchActivityCallback);
 
         if (searchHistories == null)
             return;
