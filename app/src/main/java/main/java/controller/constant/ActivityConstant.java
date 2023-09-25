@@ -8,4 +8,14 @@ public class ActivityConstant {
     public static final String SEARCH_RESULT_TITLE = "검색 결과";
 
     public static final String REGISTER_TITLE = "회원 가입";
+
+    public static Long MEMBER_ID = -1L;
+
+    public static Long getMemberId() {
+        return MEMBER_ID;
+    }
+
+    public static void setMemberId(Long memberId) {
+        MEMBER_ID = memberId;
+    }
 }

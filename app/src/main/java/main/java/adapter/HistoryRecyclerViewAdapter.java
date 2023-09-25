@@ -43,9 +43,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     List<SearchHistory> historyItemList;
     Activity activity;
 
-    public HistoryRecyclerViewAdapter(List<SearchHistory> historyItemList, Activity activity) {
+    private final Long memberId;
+
+    public HistoryRecyclerViewAdapter(List<SearchHistory> historyItemList, Activity activity, Long memberId) {
         this.historyItemList = historyItemList;
         this.activity = activity;
+        this.memberId = memberId;
     }
 
     @NonNull

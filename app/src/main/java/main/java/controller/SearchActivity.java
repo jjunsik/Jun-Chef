@@ -1,5 +1,7 @@
 package main.java.controller;
 
+import static main.java.controller.constant.ActivityConstant.getMemberId;
+import static main.java.controller.constant.ActivityConstant.setMemberId;
 import static main.java.model.constant.ResultConstant.COOKING_ORDER;
 import static main.java.model.constant.ResultConstant.INGREDIENTS;
 import static main.java.model.constant.ResultConstant.RECIPE_NAME;
@@ -14,7 +16,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -39,10 +40,14 @@ public class SearchActivity extends AppCompatActivity {
     HistoryRepository historyRepository = new LocalHistoryRepository(this);
     HistoryService historyService = new HistoryServiceImpl(historyRepository);
 
-    HistoryRecyclerViewAdapter historyAdapter;
+    private final JunChefRecipeService junChefRecipeService = new JunChefRecipeService(new RecipeHttpService(), new RecipeResponseParser());
 
-    RecipeService recipeService
-            = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
+    private final JunChefHistoryService junChefHistoryService = new JunChefHistoryService(new HistoryHttpService(), new HistoryResponseParser());
+    private final MemberService memberService = new MemberService(new MemberHttpService(), new MemberResponseParser());
+
+    private final Long memberId = getMemberId();
+
+    private final Long deleteMemberId = -1L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
