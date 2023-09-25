@@ -1,4 +1,4 @@
-package main.java.controller.backpressed;
+package main.java.util.backpressed;
 
 import static androidx.core.app.ActivityCompat.finishAffinity;
 import static main.java.controller.constant.ActivityConstant.BACK_TIME;
@@ -24,7 +24,6 @@ public class MyOnBackPressedCallback extends OnBackPressedCallback {
         // 이전에 뒤로 가기 버튼을 한 번 눌렀었던 경우이다.
         // 즉, doubleBackToExitPressedOnce 값이 이미 true 일 때이다.
         if (doubleBackToExitPressedOnce) {
-
             // 현재 액티비티를 종료하고, 액티비티 스택에 남아있는 모든 액티비티를 제거.
             // 즉, 앱의 모든 액티비티를 종료하는 역할.
             // 하지만 이 메서드만 호출한다고 해서 앱이 완전히 종료되지는 않는다.

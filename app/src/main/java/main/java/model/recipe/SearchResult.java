@@ -1,4 +1,6 @@
-package main.java.model;
+package main.java.model.recipe;
+
+import main.java.model.history.SearchHistory;
 
 public class SearchResult {
     private String recipeName;
@@ -27,7 +29,8 @@ public class SearchResult {
         this.recipeName = recipeName;
     }
 
-    public SearchHistory toSearchHistory() {
-        return new SearchHistory(getRecipeName());
-    }
+//    // TODO: ADD HISTORY 개발
+//    public SearchHistory toSearchHistory() {
+//        return new SearchHistory(getRecipeName());
+//    }
 }
