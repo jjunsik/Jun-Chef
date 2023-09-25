@@ -45,7 +45,6 @@ public class ResultActivity extends AppCompatActivity {
                 Intent goToSearchActivity = new Intent(ResultActivity.this, SearchActivity.class);
                 goToSearchActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(goToSearchActivity);
-                finish();
             }
         };
 
