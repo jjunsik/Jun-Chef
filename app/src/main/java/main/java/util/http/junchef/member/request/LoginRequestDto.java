@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 
 public class LoginRequestDto {
     private final String email;
-
     private final String passwd;
 
     public LoginRequestDto(String email, String passwd) {

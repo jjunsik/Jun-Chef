@@ -18,9 +18,7 @@ import main.java.util.parser.junchef.member.MemberResponseParser;
 
 public class MemberService {
     private final MemberHttpService memberHttpService;
-
     private final MemberResponseParser memberResponseParser;
-
     private final JunChefExceptionParser exceptionParser = new JunChefExceptionParser();
     private JunChefException junChefException;
 

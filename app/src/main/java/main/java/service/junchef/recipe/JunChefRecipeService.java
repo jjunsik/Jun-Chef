@@ -16,7 +16,7 @@ public class JunChefRecipeService {
     private final ResultParser resultParser;
     private final JunChefExceptionParser exceptionParser = new JunChefExceptionParser();
     private JunChefException junChefException;
-    SearchResult searchResult;
+    private SearchResult searchResult;
 
     public JunChefRecipeService(RecipeHttpService recipeHttpService, ResultParser resultParser) {
         this.recipeHttpService = recipeHttpService;
@@ -40,6 +40,8 @@ public class JunChefRecipeService {
 
                 searchResult = resultParser.getSearchResultByResponse(response);
                 searchResult.setRecipeName(word);
+
+                Log.d("junchef", "검색 되었다." + searchResult.toString());
 
                 return searchResult;
 

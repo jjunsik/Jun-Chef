@@ -35,6 +35,7 @@ public class RecipeHttpService {
 
         } catch (IOException e) {
             e.printStackTrace();
+
         } finally {
             if (httpURLConnection != null)
                 httpURLConnection.disconnect();
@@ -45,25 +46,32 @@ public class RecipeHttpService {
 
     private String getResponseByInputStream(InputStream inputStream) {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+
         String inputLine;
+
         StringBuilder stringBuilder = new StringBuilder();
+
         try {
             while ((inputLine = br.readLine()) != null) {
                 stringBuilder.append(inputLine);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
+
         } finally {
             closeBufferedReader(br, inputStream); // closeBufferedReader() 메서드를 호출하여 BufferedReader를 안전하게 닫음
         }
+
         return stringBuilder.toString();
     }
 
-    private void closeBufferedReader(BufferedReader br, InputStream isr) {
+    private void closeBufferedReader(BufferedReader br, InputStream inputStream) {
         if (br != null) {
             try {
                 br.close();
-                isr.close();
+                inputStream.close();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

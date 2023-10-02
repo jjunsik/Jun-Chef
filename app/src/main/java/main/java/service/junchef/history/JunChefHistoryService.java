@@ -16,9 +16,7 @@ import main.java.util.parser.junchef.history.HistoryResponseParser;
 
 public class JunChefHistoryService {
     private final HistoryHttpService historyHttpService;
-
     private final HistoryResponseParser historyResponseParser;
-
     private final JunChefExceptionParser junChefExceptionParser = new JunChefExceptionParser();
     private JunChefException junChefException;
 

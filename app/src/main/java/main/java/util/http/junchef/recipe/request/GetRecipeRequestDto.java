@@ -4,7 +4,6 @@ import static main.java.util.http.junchef.constant.JunChefBaseURL.JUN_CHEF_RECIP
 
 public class GetRecipeRequestDto {
     private final Long memberId;
-
     private final String word;
 
     public GetRecipeRequestDto(Long memberId, String word) {

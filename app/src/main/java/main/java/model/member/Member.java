@@ -6,9 +6,7 @@ import main.java.model.history.SearchHistory;
 
 public class Member {
     private final String name;
-
     private final String email;
-
     private String password;
     private final List<SearchHistory> histories;
 

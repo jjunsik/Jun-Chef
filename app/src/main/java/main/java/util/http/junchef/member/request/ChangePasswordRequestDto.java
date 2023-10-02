@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 
 public class ChangePasswordRequestDto {
     private final Long memberId;
-
     private final String newPasswd;
 
     public ChangePasswordRequestDto(Long memberId, String changePW) {

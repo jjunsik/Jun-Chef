@@ -7,6 +7,7 @@ import static main.java.model.constant.ResultConstant.RECIPE_NAME;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -20,8 +21,6 @@ import main.java.R;
 
 public class ResultActivity extends AppCompatActivity {
     TextView recipeNameTextView, ingredientsTextView, cookingOrderTextView;
-
-    OnBackPressedCallback callback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +38,11 @@ public class ResultActivity extends AppCompatActivity {
         setTextByExtra(INGREDIENTS, ingredientsTextView, R.id.result_ingredients);
         setTextByExtra(COOKING_ORDER, cookingOrderTextView, R.id.result_cookingorder);
 
-        callback = new OnBackPressedCallback(true) {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                Log.d("result", "handleOnBackPressed");
+
                 Intent goToSearchActivity = new Intent(ResultActivity.this, SearchActivity.class);
                 goToSearchActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(goToSearchActivity);

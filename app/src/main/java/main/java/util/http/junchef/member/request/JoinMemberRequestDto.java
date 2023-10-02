@@ -6,9 +6,7 @@ import androidx.annotation.NonNull;
 
 public class JoinMemberRequestDto {
     private final String name;
-
     private final String email;
-
     private final String passwd;
 
     public JoinMemberRequestDto(String name, String email, String passwd) {

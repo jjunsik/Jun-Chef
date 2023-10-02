@@ -1,7 +1,5 @@
 package main.java.model.recipe;
 
-import main.java.model.history.SearchHistory;
-
 public class SearchResult {
     private String recipeName;
     private final String ingredients;
@@ -28,9 +26,4 @@ public class SearchResult {
     public void setRecipeName(String recipeName){
         this.recipeName = recipeName;
     }
-
-//    // TODO: ADD HISTORY 개발
-//    public SearchHistory toSearchHistory() {
-//        return new SearchHistory(getRecipeName());
-//    }
 }

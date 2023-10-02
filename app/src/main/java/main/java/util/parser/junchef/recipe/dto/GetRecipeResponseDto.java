@@ -2,9 +2,7 @@ package main.java.util.parser.junchef.recipe.dto;
 
 public class GetRecipeResponseDto {
     private String recipeName;
-
     private String ingredients;
-
     private String cookingOrder;
 
     public String getRecipeName() {
