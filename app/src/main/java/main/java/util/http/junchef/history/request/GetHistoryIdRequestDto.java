@@ -20,6 +20,6 @@ public class GetHistoryIdRequestDto {
     }
 
     public String getUrl() {
-        return JUN_CHEF_HISTORY_BASE_URL + "/member/" + getMemberId() + "?recipeName=" + getRecipeName();
+        return JUN_CHEF_HISTORY_BASE_URL + "/" + getMemberId() + "/" + getRecipeName();
     }
 }
