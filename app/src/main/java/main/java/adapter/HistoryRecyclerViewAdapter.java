@@ -3,10 +3,10 @@ package main.java.adapter;
 import static main.java.model.constant.ResultConstant.COOKING_ORDER;
 import static main.java.model.constant.ResultConstant.INGREDIENTS;
 import static main.java.model.constant.ResultConstant.RECIPE_NAME;
-import static main.java.util.error.constant.ErrorConstant.getErrorFromMessage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,29 +20,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 import main.java.R;
 import main.java.controller.ResultActivity;
-import main.java.model.SearchHistory;
-import main.java.model.SearchResult;
-import main.java.repository.HistoryRepository;
-import main.java.repository.LocalHistoryRepository;
-import main.java.service.history.HistoryService;
-import main.java.service.history.HistoryServiceImpl;
-import main.java.service.recipe.GptRecipeService;
-import main.java.service.recipe.RecipeService;
+import main.java.model.history.SearchHistory;
+import main.java.service.junchef.history.JunChefHistoryService;
+import main.java.service.junchef.recipe.JunChefRecipeService;
 import main.java.util.LoadingDialog;
 import main.java.util.error.ErrorFormat;
 import main.java.util.error.dialog.ErrorDialog;
-import main.java.util.http.HttpService;
-import main.java.util.parser.GptResponseParser;
+import main.java.util.error.junchef.JunChefException;
+import main.java.util.http.junchef.history.HistoryHttpService;
+import main.java.util.http.junchef.recipe.RecipeHttpService;
+import main.java.util.parser.junchef.history.HistoryResponseParser;
+import main.java.util.parser.junchef.recipe.RecipeResponseParser;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    List<SearchHistory> historyItemList;
-    Activity activity;
-
+    private final List<SearchHistory> historyItemList;
+    private final Activity activity;
     private final Long memberId;
 
     public HistoryRecyclerViewAdapter(List<SearchHistory> historyItemList, Activity activity, Long memberId) {
@@ -60,10 +55,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        HistoryRepository historyRepository = new LocalHistoryRepository(activity);
-        HistoryService historyService = new HistoryServiceImpl(historyRepository);
-        RecipeService recipeService
-                = new GptRecipeService(new HttpService(), new GptResponseParser(), historyService);
+        JunChefRecipeService junChefRecipeService = new JunChefRecipeService(new RecipeHttpService(), new RecipeResponseParser());
+        JunChefHistoryService junChefHistoryService = new JunChefHistoryService(new HistoryHttpService(), new HistoryResponseParser());
 
         final LoadingDialog loadingDialog = new LoadingDialog(activity);
 
@@ -78,9 +71,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         historyItemViewHolder.itemLayout.setOnClickListener(v -> {
             loadingDialog.show();
-            CompletableFuture<SearchResult> futureResult = recipeService.search(recipeName);
 
-            futureResult.thenAccept(result -> {
+            junChefRecipeService.search(memberId, recipeName)
+            .thenAcceptAsync(result -> {
                 loadingDialog.dismiss();
 
                 Intent goToResultActivity = new Intent(activity, ResultActivity.class);
@@ -90,24 +83,113 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 goToResultActivity.putExtra(COOKING_ORDER, result.getCookingOrder());
 
                 activity.startActivity(goToResultActivity);
-            }).exceptionally(ex -> {
+            })
+            .exceptionally(ex -> {
                 loadingDialog.dismiss();
-                String message = Objects.requireNonNull(ex.getMessage());
-                ErrorFormat result = getErrorFromMessage(message);
 
-                activity.runOnUiThread(() -> {
-                    ErrorDialog errorDialog = new ErrorDialog(activity, result);
-                    errorDialog.show();
-                });
+                if (ex != null) {
+                    Log.d("junchef", "최근 검색어로 레시피 조회 실패(HistoryRecyclerViewAdapter)" + ex.getClass().getName());
+                    JunChefException junChefException;
+
+                    if (ex.getCause() instanceof JunChefException) {
+                        Log.d("junchef", "준쉐프 예외임");
+
+                        junChefException = (JunChefException) ex.getCause();
+                        Log.d("junchef", "예외 잘 받음(HistoryRecyclerViewAdapter)" + Objects.requireNonNull(junChefException).getCode() + junChefException.getTitle() + junChefException.getMessage());
+
+                        ErrorFormat errorFormat = new ErrorFormat(junChefException.getTitle(), junChefException.getMessage());
+                        Log.d("junchef", "에러 포맷 완성" + errorFormat.getTitle() + errorFormat.getMessage());
+
+                        activity.runOnUiThread(() -> {
+                            Log.d("junchef", "에러 다이얼로그 객체 만들기 전");
+                            ErrorDialog errorDialog = new ErrorDialog(activity, errorFormat);
+
+                            Log.d("junchef", "에러 다이얼로그 객체 만들고 시작 전" + errorDialog);
+                            errorDialog.show();
+                        });
+                    }
+                }
 
                 return null;
             });
         });
 
         historyItemViewHolder.removeHistoryBtn.setOnClickListener(v -> {
-            historyService.removeHistory(itemIdx + 1);
-            deleteItem(itemIdx);
-            Toast.makeText(activity, "\"" + recipeName + "\" 삭제", Toast.LENGTH_SHORT).show();
+        // 비동기적으로 historyId를 얻어옴
+        junChefHistoryService.getHistoryId(memberId, recipeName)
+            .thenAcceptAsync(historyId -> {
+            // historyId를 사용하여 비동기적으로 히스토리 삭제
+            junChefHistoryService.deleteHistory(historyId)
+                .thenAcceptAsync(result -> {
+                    // UI 업데이트
+                    Log.d("junchef", "최근 검색어 삭제 " + historyId);
+
+                    activity.runOnUiThread(() -> {
+                        deleteItem(itemIdx);
+
+                        // 토스트 메시지 표시
+                        Toast.makeText(activity, "\"" + recipeName + "\" 삭제", Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .exceptionally(ex -> {
+                    // 삭제 실패 시 예외 처리
+                    // 예외 처리 코드 추가
+                    if (ex != null) {
+                        Log.d("junchef", "최근 검색어 삭제 실패 (HistoryRecyclerViewAdapter)" + ex.getClass().getName());
+
+                        JunChefException junChefException;
+
+                        if (ex.getCause() instanceof JunChefException) {
+                            Log.d("junchef", "준쉐프 예외임");
+
+                            junChefException = (JunChefException) ex.getCause();
+                            Log.d("junchef", "예외 잘 받음(HistoryRecyclerViewAdapter)" + Objects.requireNonNull(junChefException).getCode() + junChefException.getTitle() + junChefException.getMessage());
+
+                            ErrorFormat errorFormat = new ErrorFormat(junChefException.getTitle(), junChefException.getMessage());
+                            Log.d("junchef", "에러 포맷 완성" + errorFormat.getTitle() + errorFormat.getMessage());
+
+                            activity.runOnUiThread(() -> {
+                                Log.d("junchef", "에러 다이얼로그 객체 만들기 전");
+                                ErrorDialog errorDialog = new ErrorDialog(activity, errorFormat);
+
+                                Log.d("junchef", "에러 다이얼로그 객체 만들고 시작 전" + errorDialog);
+                                errorDialog.show();
+                            });
+                        }
+                    }
+
+                    return null;
+                });
+            })
+            .exceptionally(ex -> {
+                // historyId 얻어오기 실패 시 예외 처리
+                // 예외 처리 코드 추가
+                if (ex != null) {
+                    Log.d("junchef", "historyId 얻지 못함 (HistoryRecyclerViewAdapter)" + ex.getClass().getName());
+
+                    JunChefException junChefException;
+
+                    if (ex.getCause() instanceof JunChefException) {
+                        Log.d("junchef", "준쉐프 예외임");
+
+                        junChefException = (JunChefException) ex.getCause();
+                        Log.d("junchef", "예외 잘 받음(HistoryRecyclerViewAdapter)" + Objects.requireNonNull(junChefException).getCode() + junChefException.getTitle() + junChefException.getMessage());
+
+                        ErrorFormat errorFormat = new ErrorFormat(junChefException.getTitle(), junChefException.getMessage());
+                        Log.d("junchef", "에러 포맷 완성" + errorFormat.getTitle() + errorFormat.getMessage());
+
+                        activity.runOnUiThread(() -> {
+                            Log.d("junchef", "에러 다이얼로그 객체 만들기 전");
+                            ErrorDialog errorDialog = new ErrorDialog(activity, errorFormat);
+
+                            Log.d("junchef", "에러 다이얼로그 객체 만들고 시작 전" + errorDialog);
+                            errorDialog.show();
+                        });
+                    }
+                }
+
+                return null;
+            });
         });
     }
 
@@ -131,9 +213,20 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    // 아이템 삭제 이벤트 처리 메서드
     public void deleteItem(int position) {
+        Log.d("junchef", "deleteItemPosition: " + position);
+
+        // 아이템 삭제 후 데이터 업데이트
         historyItemList.remove(position);
+        Log.d("junchef", "아이템 삭제 후 데이터 업데이트");
+
+        // 리사이클러뷰에 아이템 삭제를 알림
         notifyItemRemoved(position);
+        Log.d("junchef", "아이템 삭제 리사클러뷰에 알림");
+
+        // 삭제된 아이템 이후에 있는 아이템들의 뷰 업데이트
         notifyItemRangeChanged(position, historyItemList.size() - position);
+        Log.d("junchef", "아이템들의 뷰 업데이트");
     }
 }
