@@ -40,7 +40,7 @@ public class MemberHttpService {
     }
 
     public String logout(LogoutRequestDto logoutRequestDto) {
-        return requestAndResponseOfGetAndDelete(logoutRequestDto.getUrl(), GET_METHOD_NAME);
+        return requestAndResponseOfPostAndPut(logoutRequestDto.getUrl(), POST_METHOD_NAME, logoutRequestDto.toString());
     }
 
     public String changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
