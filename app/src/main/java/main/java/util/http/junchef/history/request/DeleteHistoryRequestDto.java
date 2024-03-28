@@ -14,6 +14,6 @@ public class DeleteHistoryRequestDto {
     }
 
     public String getUrl() {
-        return JUN_CHEF_HISTORY_BASE_URL + "/" + getHistoryId();
+        return JUN_CHEF_HISTORY_BASE_URL + "/delete/" + getHistoryId();
     }
 }
