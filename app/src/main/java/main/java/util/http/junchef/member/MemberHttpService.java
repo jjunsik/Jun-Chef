@@ -39,8 +39,8 @@ public class MemberHttpService {
         return requestAndResponseOfPostAndPut(loginRequestDto.getUrl(), POST_METHOD_NAME, loginRequestDto.toString());
     }
 
-    public String logout(LogoutRequestDto logoutRequestDto) {
-        return requestAndResponseOfPostAndPut(logoutRequestDto.getUrl(), POST_METHOD_NAME, logoutRequestDto.toString());
+    public void logout(LogoutRequestDto logoutRequestDto) {
+        logout(logoutRequestDto.getUrl());
     }
 
     public String changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
@@ -109,6 +109,28 @@ public class MemberHttpService {
         }
 
         return response;
+    }
+
+    private void logout(String url) {
+        HttpURLConnection httpURLConnection;
+
+        try{
+            URL myUrl = new URL(url);
+            httpURLConnection = (HttpURLConnection) myUrl.openConnection();
+
+            httpURLConnection.setDoOutput(true);
+
+            // header
+            httpURLConnection.setRequestMethod(POST_METHOD_NAME);
+            httpURLConnection.setRequestProperty("Content-Type", JSON_CONTENT_TYPE);
+
+        } catch (ConnectException u) {
+            throw new JunChefException(JunChefExceptionContent.NETWORK_ERROR.getCode(), JunChefExceptionContent.NETWORK_ERROR.getTitle(), JunChefExceptionContent.NETWORK_ERROR.getMessage());
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     private byte[] getRequestBodyBytes(String string) {
