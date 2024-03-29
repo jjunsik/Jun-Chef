@@ -5,6 +5,10 @@ import static main.java.util.http.constant.RequestConstant.GET_METHOD_NAME;
 import static main.java.util.http.constant.RequestConstant.JSON_CONTENT_TYPE;
 import static main.java.util.http.constant.RequestConstant.POST_METHOD_NAME;
 import static main.java.util.http.constant.RequestConstant.PUT_METHOD_NAME;
+import static main.java.util.http.junchef.savesession.EncryptedPreferencesManager.getSessionIdFromEncryptedSharedPreferences;
+import static main.java.util.http.junchef.savesession.EncryptedPreferencesManager.saveSessionIdInEncryptedSharedPreferences;
+
+import android.content.Context;
 
 import androidx.annotation.Nullable;
 
@@ -13,9 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import main.java.util.error.junchef.JunChefException;
 import main.java.util.error.junchef.JunChefExceptionContent;
@@ -27,16 +31,22 @@ import main.java.util.http.junchef.member.request.LoginRequestDto;
 import main.java.util.http.junchef.member.request.LogoutRequestDto;
 
 public class MemberHttpService {
+    private final Context context;
+
+    public MemberHttpService(Context context) {
+        this.context = context;
+    }
+
     public String getMember(GetMemberRequestDto getMemberRequestDto) {
-        return requestAndResponseOfGetAndDelete(getMemberRequestDto.getUrl(), GET_METHOD_NAME);
+        return getAndDelete(getMemberRequestDto.getUrl(), GET_METHOD_NAME);
     }
 
     public String joinMember(JoinMemberRequestDto joinMemberRequestDto) {
-        return requestAndResponseOfPostAndPut(joinMemberRequestDto.getUrl(), POST_METHOD_NAME, joinMemberRequestDto.toString());
+        return loginAndJoin(joinMemberRequestDto.getUrl(), joinMemberRequestDto.toString());
     }
 
     public String login(LoginRequestDto loginRequestDto) {
-        return requestAndResponseOfPostAndPut(loginRequestDto.getUrl(), POST_METHOD_NAME, loginRequestDto.toString());
+        return loginAndJoin(loginRequestDto.getUrl(), loginRequestDto.toString());
     }
 
     public void logout(LogoutRequestDto logoutRequestDto) {
@@ -44,15 +54,15 @@ public class MemberHttpService {
     }
 
     public String changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
-        return requestAndResponseOfPostAndPut(changePasswordRequestDto.getUrl(), PUT_METHOD_NAME, changePasswordRequestDto.toString());
+        return postAndPut(changePasswordRequestDto.getUrl(), PUT_METHOD_NAME, changePasswordRequestDto.toString());
     }
 
     public String deleteMember(DeleteMemberRequestDto deleteMemberRequestDto) {
-        return requestAndResponseOfGetAndDelete(deleteMemberRequestDto.getUrl(), DELETE_METHOD_NAME);
+        return getAndDelete(deleteMemberRequestDto.getUrl(), DELETE_METHOD_NAME);
     }
 
     @Nullable
-    private String requestAndResponseOfGetAndDelete(String memberUrl, String methodType) {
+    private String getAndDelete(String memberUrl, String methodType) {
         String response = null;
         HttpURLConnection httpURLConnection = null;
 
@@ -62,16 +72,27 @@ public class MemberHttpService {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod(methodType);
 
+            String sessionId = getSessionIdFromEncryptedSharedPreferences(context);
+
+            // 세션 ID가 있으면 요청 헤더에 추가
+            if (sessionId != null && !sessionId.isEmpty()) {
+                httpURLConnection.setRequestProperty("Cookie", "JSESSIONID=" + sessionId);
+            }
+
             if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK)
                 return null;
 
             response = getResponseByInputStream(httpURLConnection.getInputStream());
 
-        } catch (UnknownHostException u) {
+
+        } catch (ConnectException u) {
             throw new JunChefException(JunChefExceptionContent.NETWORK_ERROR.getCode(), JunChefExceptionContent.NETWORK_ERROR.getTitle(), JunChefExceptionContent.NETWORK_ERROR.getMessage());
 
         } catch (IOException e) {
             e.printStackTrace();
+            // 아이디, 비밀번호를 모두 입력하지 않고 로그인 or 회원 가입 버튼을 누르면 java.io.FileNotFoundException(IOException을 상속 받은 예외임) 발생하므로 이에 대한 예외 처리 해야 됨.
+            throw new JunChefException(JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getCode(), JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getTitle(), JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getMessage());
+
         } finally {
             if (httpURLConnection != null)
                 httpURLConnection.disconnect();
@@ -81,7 +102,7 @@ public class MemberHttpService {
     }
 
     @Nullable
-    private String requestAndResponseOfPostAndPut(String url, String methodType, String bodyRequest) {
+    private String loginAndJoin(String url, String bodyRequest) {
         String response = null;
         HttpURLConnection httpURLConnection;
 
@@ -92,8 +113,44 @@ public class MemberHttpService {
             httpURLConnection.setDoOutput(true);
 
             // header
+            httpURLConnection.setRequestMethod(POST_METHOD_NAME);
+            httpURLConnection.setRequestProperty("Content-Type", JSON_CONTENT_TYPE);
+
+            // body
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            outputStream.write(getRequestBodyBytes(bodyRequest));
+
+            response = getResponseByInputStream(httpURLConnection, httpURLConnection.getInputStream());
+
+        } catch (ConnectException u) {
+            throw new JunChefException(JunChefExceptionContent.NETWORK_ERROR.getCode(), JunChefExceptionContent.NETWORK_ERROR.getTitle(), JunChefExceptionContent.NETWORK_ERROR.getMessage());
+
+        } catch (IOException e){
+            e.printStackTrace();
+            throw new JunChefException(JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getCode(), JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getTitle(), JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getMessage());
+        }
+
+        return response;
+    }
+
+    @Nullable
+    private String postAndPut(String url, String methodType, String bodyRequest) {
+        String response = null;
+        HttpURLConnection httpURLConnection;
+
+        try{
+            URL myUrl = new URL(url);
+            httpURLConnection = (HttpURLConnection) myUrl.openConnection();
+
+            httpURLConnection.setDoOutput(true);
+
+            // 세션 ID 불러오기
+            String sessionId = getSessionIdFromEncryptedSharedPreferences(context);
+
+            // header
             httpURLConnection.setRequestMethod(methodType);
             httpURLConnection.setRequestProperty("Content-Type", JSON_CONTENT_TYPE);
+            httpURLConnection.addRequestProperty("Cookie", "JSESSIONID=" + sessionId); // 세션 ID를 Cookie 헤더에 추가
 
             // body
             OutputStream outputStream = httpURLConnection.getOutputStream();
@@ -106,6 +163,7 @@ public class MemberHttpService {
 
         } catch (IOException e){
             e.printStackTrace();
+            throw new JunChefException(JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getCode(), JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getTitle(), JunChefExceptionContent.NON_EXIST_MEMBER_ERROR.getMessage());
         }
 
         return response;
@@ -137,7 +195,7 @@ public class MemberHttpService {
         return string.getBytes();
     }
 
-    private String getResponseByInputStream(InputStream inputStream) {
+    private String getResponseByInputStream(HttpURLConnection httpURLConnection, InputStream inputStream) {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         String inputLine;
         StringBuilder stringBuilder = new StringBuilder();
