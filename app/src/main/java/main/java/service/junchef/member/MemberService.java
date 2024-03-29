@@ -120,26 +120,10 @@ public class MemberService {
         });
     }
 
-    public CompletableFuture<Long> logout(Long memberId) {
-        return CompletableFuture.supplyAsync(() -> {
-            LogoutRequestDto logoutRequestDto = new LogoutRequestDto(memberId);
-
-            try {
-                String response = memberHttpService.logout(logoutRequestDto);
-
-                junChefException = exceptionParser.getJunChefException(response);
-
-                if (junChefException.getCode() != 0) {
-                    Log.d("junchef", "로그아웃 예외 받음" + junChefException.getCode() + junChefException.getTitle() + junChefException.getMessage());
-                    throw new JunChefException(junChefException.getCode(), junChefException.getTitle(), junChefException.getMessage());
-                }
-
-                return memberResponseParser.getMemberIdByResponse(response);
-
-            } catch (JunChefException j) {
-                Log.d("junchef", "로그아웃 에러" + j.getCode() + j.getTitle() + j.getMessage());
-                throw j;
-            }
+    public CompletableFuture<Void> logout() {
+        return CompletableFuture.runAsync(() -> {
+            LogoutRequestDto logoutRequestDto = new LogoutRequestDto();
+            memberHttpService.logout(logoutRequestDto);
         });
     }
 
