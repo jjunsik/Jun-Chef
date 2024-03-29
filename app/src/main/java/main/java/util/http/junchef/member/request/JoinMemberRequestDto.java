@@ -28,7 +28,7 @@ public class JoinMemberRequestDto {
     }
 
     public String getUrl() {
-        return JUN_CHEF_MEMBER_BASE_URL;
+        return JUN_CHEF_MEMBER_BASE_URL + "/join";
     }
 
     @NonNull
