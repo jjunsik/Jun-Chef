@@ -29,6 +29,7 @@ import main.java.util.http.junchef.member.request.GetMemberRequestDto;
 import main.java.util.http.junchef.member.request.JoinMemberRequestDto;
 import main.java.util.http.junchef.member.request.LoginRequestDto;
 import main.java.util.http.junchef.member.request.LogoutRequestDto;
+import main.java.util.parser.junchef.session.SessionIdParser;
 
 public class MemberHttpService {
     private final Context context;
@@ -82,7 +83,18 @@ public class MemberHttpService {
             if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK)
                 return null;
 
-            response = getResponseByInputStream(httpURLConnection.getInputStream());
+            response = getResponseByInputStream(httpURLConnection, httpURLConnection.getInputStream());
+
+            // 쿠키 헤더 가져오기
+            String cookiesHeader = httpURLConnection.getHeaderField("Set-Cookie");
+
+            // 세션 ID 파싱
+            String newSessionId = SessionIdParser.parseSessionId(cookiesHeader);
+
+            assert sessionId != null;
+            if (!sessionId.equals(newSessionId)) {
+                saveSessionIdInEncryptedSharedPreferences(newSessionId, context);
+            }
 
 
         } catch (ConnectException u) {
@@ -156,9 +168,19 @@ public class MemberHttpService {
             OutputStream outputStream = httpURLConnection.getOutputStream();
             outputStream.write(getRequestBodyBytes(bodyRequest));
 
-            response = getResponseByInputStream(httpURLConnection.getInputStream());
+            response = getResponseByInputStream(httpURLConnection, httpURLConnection.getInputStream());
 
-        } catch (UnknownHostException u) {
+            // 쿠키 헤더 가져오기
+            String cookiesHeader = httpURLConnection.getHeaderField("Set-Cookie");
+
+            // 세션 ID 파싱
+            String newSessionId = SessionIdParser.parseSessionId(cookiesHeader);
+
+            if (!sessionId.equals(newSessionId)) {
+                saveSessionIdInEncryptedSharedPreferences(newSessionId, context);
+            }
+
+        } catch (ConnectException u) {
             throw new JunChefException(JunChefExceptionContent.NETWORK_ERROR.getCode(), JunChefExceptionContent.NETWORK_ERROR.getTitle(), JunChefExceptionContent.NETWORK_ERROR.getMessage());
 
         } catch (IOException e){
@@ -203,6 +225,16 @@ public class MemberHttpService {
         try {
             while ((inputLine = br.readLine()) != null) {
                 stringBuilder.append(inputLine);
+            }
+
+            // 쿠키 헤더 가져오기
+            String cookiesHeader = httpURLConnection.getHeaderField("Set-Cookie");
+
+            // 세션 ID 파싱
+            String sessionId = SessionIdParser.parseSessionId(cookiesHeader);
+
+            if (sessionId != null) {
+                saveSessionIdInEncryptedSharedPreferences(sessionId, context);
             }
 
         } catch (IOException e) {
