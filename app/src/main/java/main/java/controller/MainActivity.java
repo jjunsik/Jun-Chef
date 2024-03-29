@@ -22,7 +22,7 @@ import main.java.util.http.junchef.member.MemberHttpService;
 import main.java.util.parser.junchef.member.MemberResponseParser;
 
 public class MainActivity extends AppCompatActivity {
-    private final MemberService memberService = new MemberService(new MemberHttpService(), new MemberResponseParser());
+    private final MemberService memberService = new MemberService(new MemberHttpService(this), new MemberResponseParser());
     private EditText email;
     private EditText passwd;
 

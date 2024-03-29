@@ -26,7 +26,7 @@ import main.java.util.parser.junchef.member.MemberResponseParser;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText registerEmail, registerPasswd, registerName;
-    private final MemberService memberService = new MemberService(new MemberHttpService(), new MemberResponseParser());
+    private final MemberService memberService = new MemberService(new MemberHttpService(this), new MemberResponseParser());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

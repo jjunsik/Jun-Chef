@@ -38,9 +38,9 @@ import main.java.util.parser.junchef.recipe.RecipeResponseParser;
 
 public class SearchActivity extends AppCompatActivity {
     private HistoryRecyclerViewAdapter historyAdapter;
-    private final JunChefRecipeService junChefRecipeService = new JunChefRecipeService(new RecipeHttpService(), new RecipeResponseParser());
-    private final JunChefHistoryService junChefHistoryService = new JunChefHistoryService(new HistoryHttpService(), new HistoryResponseParser());
-    private final MemberService memberService = new MemberService(new MemberHttpService(), new MemberResponseParser());
+    private final JunChefRecipeService junChefRecipeService = new JunChefRecipeService(new RecipeHttpService(this), new RecipeResponseParser());
+    private final JunChefHistoryService junChefHistoryService = new JunChefHistoryService(new HistoryHttpService(this), new HistoryResponseParser());
+    private final MemberService memberService = new MemberService(new MemberHttpService(this), new MemberResponseParser());
     private final Long memberId = getMemberId();
     private final Long deleteMemberId = -1L;
 

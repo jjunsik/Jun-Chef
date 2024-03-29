@@ -55,8 +55,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        JunChefRecipeService junChefRecipeService = new JunChefRecipeService(new RecipeHttpService(), new RecipeResponseParser());
-        JunChefHistoryService junChefHistoryService = new JunChefHistoryService(new HistoryHttpService(), new HistoryResponseParser());
+        JunChefRecipeService junChefRecipeService = new JunChefRecipeService(new RecipeHttpService(activity), new RecipeResponseParser());
+        JunChefHistoryService junChefHistoryService = new JunChefHistoryService(new HistoryHttpService(activity), new HistoryResponseParser());
 
         final LoadingDialog loadingDialog = new LoadingDialog(activity);
 
